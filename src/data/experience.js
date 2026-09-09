@@ -34,7 +34,7 @@ const experience = [
       { value: "−97%", label: "p99 latency in an outage" },
     ],
     blurb:
-      "Live delivery tracking and order recommendations now; the core order service and a 20x holiday outage before that.",
+      "Responsible for the order lifecycle end to end — placement, dispatch, delivery and vendor payouts — plus the prediction layer sitting on top of it: ETAs and recommendations.",
     stints: [
       {
         role: "Software Engineer",
