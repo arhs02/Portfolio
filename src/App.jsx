@@ -182,7 +182,11 @@ function App() {
 
       <div className="relative z-20">
         {sections.map((section) => (
-          <Section key={section.id} id={section.id} bare={section.id === "home"}>
+          <Section
+            key={section.id}
+            id={section.id}
+            bare={section.id === "home" || section.id === "experience"}
+          >
             {(section.id === "projects" ||
               isMobile ||
               isNarrowAtMountRef.current ||
@@ -200,11 +204,9 @@ function App() {
                 )}
 
                 {section.id === "experience" && (
-                  <Panel num={section.num} label={section.label} wide>
-                    <Suspense fallback={<Loading />}>
-                      <ExperienceSectionLazy />
-                    </Suspense>
-                  </Panel>
+                  <Suspense fallback={<Loading />}>
+                    <ExperienceSectionLazy />
+                  </Suspense>
                 )}
 
                 {section.id === "resume" && (

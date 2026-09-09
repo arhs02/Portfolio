@@ -194,17 +194,24 @@ body {
   pointer-events: none;
 }
 
+/* The rail is exactly one dot wide. Labels are absolutely positioned to the
+   LEFT of the dot: opacity alone still reserves layout, which pushed the
+   whole rail ~175px inboard and put the dots on top of the content. */
 .nav-dot {
-  display: flex;
-  align-items: center;
-  gap: 12px;
+  position: relative;
+  display: block;
+  width: 22px;
+  height: 22px;
   color: rgba(253, 252, 250, 0.75);
 }
 .nav-dot::before {
   content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
   width: 6px;
   height: 6px;
-  flex: none;
+  margin: -3px 0 0 -3px;
   border-radius: 50%;
   background: currentColor;
   box-shadow: 0 1px 5px rgba(40, 50, 66, 0.55);
@@ -214,6 +221,11 @@ body {
     background-color 0.4s ease;
 }
 .nav-label {
+  position: absolute;
+  right: 100%;
+  top: 50%;
+  margin-right: 4px;
+  transform: translateY(-50%) translateX(-6px);
   font-family: var(--font-body);
   font-size: 0.625rem;
   letter-spacing: 0.24em;
@@ -224,14 +236,15 @@ body {
     0 1px 3px rgba(40, 50, 66, 0.6),
     0 1px 14px rgba(40, 50, 66, 0.5);
   opacity: 0;
-  transform: translateX(-6px);
+  pointer-events: none;
   transition:
     opacity 0.35s ease,
     transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
 }
-.nav-dot:hover .nav-label {
+.nav-dot:hover .nav-label,
+.nav-dot:focus-visible .nav-label {
   opacity: 1;
-  transform: none;
+  transform: translateY(-50%) translateX(0);
 }
 .nav-dot[data-active="true"] {
   color: var(--accent-soft);
@@ -402,6 +415,227 @@ html.snap-enabled section {
     transition: none;
   }
   .drift {
+    animation: none;
+  }
+}
+
+/* ============================================================
+   Experience — pinned horizontal track
+
+   The runway is the scroll budget; the pin is what the viewer
+   actually sees. Kept deliberately short (240vh, so ~1.4 screens
+   of travel) because the main usability complaint about pinned
+   sections is being held too long.
+   ============================================================ */
+
+.exp-runway {
+  position: relative;
+  height: 240vh;
+}
+
+.exp-pin {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 1.75rem;
+  padding: 0 clamp(1.25rem, 5vw, 5rem) 0 clamp(1.25rem, 5vw, 5rem);
+  overflow: hidden;
+}
+
+.exp-head {
+  flex: none;
+}
+
+.exp-viewport {
+  overflow: hidden;
+}
+
+.exp-track {
+  display: flex;
+  gap: 22px;
+  will-change: transform;
+}
+
+/* ---- Card ---- */
+
+.exp-card {
+  flex: 0 0 clamp(268px, 38vw, 520px);
+  display: flex;
+  flex-direction: column;
+  padding: 26px 24px;
+  min-height: 56vh;
+}
+
+.exp-now {
+  font-family: var(--font-body);
+  font-size: 0.625rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--accent);
+  border: 1px solid var(--accent-soft);
+  border-radius: 999px;
+  padding: 2px 9px;
+}
+
+/* ---- Footer controls ---- */
+
+.exp-foot {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+}
+
+.exp-progress {
+  flex: 1;
+  height: 2px;
+  background: var(--line);
+  overflow: hidden;
+}
+.exp-progress-bar {
+  display: block;
+  height: 100%;
+  background: var(--accent);
+  transform: scaleX(0);
+  transform-origin: left center;
+}
+
+.exp-jumps,
+.exp-arrows {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* Hit area stays 24px even though the dot reads as 6px. */
+.exp-jump {
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  background: transparent;
+  position: relative;
+  cursor: pointer;
+}
+.exp-jump::before {
+  content: "";
+  position: absolute;
+  inset: 9px;
+  border-radius: 50%;
+  background: var(--ink-faint);
+  opacity: 0.4;
+  transition:
+    opacity 0.3s ease,
+    background-color 0.3s ease,
+    transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.exp-jump[data-active="true"]::before {
+  background: var(--accent);
+  opacity: 1;
+  transform: scale(1.5);
+}
+
+.exp-arrow {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  cursor: pointer;
+}
+
+/* ---- Vertical fallback (mobile, reduced motion) ---- */
+
+.exp-linear {
+  display: grid;
+  gap: 18px;
+}
+.exp-linear .exp-card {
+  flex: none;
+  min-height: 0;
+}
+
+/* ---- Detail overlay ---- */
+
+.exp-scrim {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  background: rgba(38, 48, 60, 0.55);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(0.75rem, 3vw, 2.5rem);
+  animation: fade-in 0.25s ease-out both;
+}
+
+.exp-detail {
+  width: min(880px, 100%);
+  max-height: 88vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--paper);
+  outline: none;
+}
+
+.exp-detail-head {
+  flex: none;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1.5rem;
+  padding: clamp(1.5rem, 4vw, 2.25rem) clamp(1.25rem, 4vw, 2.25rem) 1.25rem;
+  border-bottom: 1px solid var(--line);
+}
+
+.exp-close {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  color: var(--ink);
+  background: transparent;
+  cursor: pointer;
+  transition:
+    border-color 0.25s ease,
+    color 0.25s ease;
+}
+.exp-close:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.exp-detail-body {
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 1.5rem clamp(1.25rem, 4vw, 2.25rem) clamp(2rem, 5vw, 3rem);
+}
+
+.exp-stack {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  list-style: none;
+  padding: 0;
+}
+.exp-stack li {
+  font-size: 0.625rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  border: 1px solid var(--line);
+  padding: 3px 9px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .exp-scrim {
     animation: none;
   }
 }
