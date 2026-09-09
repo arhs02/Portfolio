@@ -107,7 +107,7 @@ const experience = [
       { value: "−78%", label: "inference latency" },
     ],
     blurb:
-      "A dual-tier autonomous SRE engine that diagnoses zero-day failures across millions of supercomputer telemetry events.",
+      "Built the anomaly-detection pipeline over a supercomputer's log telemetry — cheap models triage everything, and only what looks wrong escalates to a heavyweight reasoning tier.",
     stints: [
       {
         role: "Research Aide",
