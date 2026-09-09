@@ -1,35 +1,315 @@
 @import "tailwindcss";
 
-/* Custom styles for smooth scrolling */
+/* ============================================================
+   WORKSTATION '98 — design tokens
+   Warm near-black, amber phosphor, hard edges. No purple,
+   no glassmorphism, no blur.
+   ============================================================ */
+
+:root {
+  /* Surfaces — warm near-black, never pure #000 */
+  --bg: #0a0a0b;
+  --bg-sink: #060607;
+  --bg-raise: #131316;
+  --bg-hi: #1a1a1e;
+
+  /* Rules & borders — hard, visible, 1px */
+  --line: #26262c;
+  --line-hot: #3c3c46;
+
+  /* Ink — warm off-white, never pure #fff */
+  --ink: #e8e3d8;
+  --ink-dim: #918d84;
+  --ink-faint: #5d5a54;
+
+  /* Phosphor */
+  --amber: #ffb000;
+  --amber-dim: #a87400;
+  --cyan: #4ec9d4;
+  --red: #ff5c4d;
+
+  --accent: var(--amber);
+  --on-accent: #0a0a0b;
+
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo,
+    Consolas, monospace;
+  --font-display: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+
+  /* Cursor spotlight position, updated from JS */
+  --mx: 50vw;
+  --my: 50vh;
+  --scroll-y: 0px;
+
+  color-scheme: dark;
+}
+
 html {
   scroll-behavior: smooth;
 }
 
-/* iOS Safari: create a stacking context to avoid fixed/transform paint bugs */
 html,
 body,
 #root {
   isolation: isolate;
 }
 
-/* iOS Safari viewport sizing guard */
 html,
 body {
   min-height: 100%;
-  background-color: #000; /* ensure black base behind gradient */
+  background-color: var(--bg);
 }
 
-/* Snap behavior (toggled by adding `.snap-enabled` class to <html> or <body>) */
+body {
+  font-family: var(--font-display);
+  color: var(--ink);
+  /* Warm base + a faint amber bloom that follows the cursor. */
+  background-color: var(--bg);
+}
+
+::selection {
+  background: var(--amber);
+  color: var(--on-accent);
+}
+
+/* ============================================================
+   Background layers
+   ============================================================ */
+
+/* Flat base with a faint technical grid. Replaces the old gradient. */
+.bg-base {
+  background-color: var(--bg);
+  background-image:
+    linear-gradient(to right, rgba(255, 255, 255, 0.022) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.022) 1px, transparent 1px);
+  background-size: 64px 64px;
+}
+
+/* Cursor-follow phosphor bloom — cheap, GPU-composited. */
+.bg-bloom {
+  background: radial-gradient(
+    420px circle at var(--mx) var(--my),
+    rgba(255, 176, 0, 0.055),
+    transparent 70%
+  );
+  transition: opacity 0.4s ease;
+}
+
+/* CRT scanlines. Kept subtle — texture, not a costume. */
+.crt-scanlines {
+  background-image: repeating-linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.22) 0px,
+    rgba(0, 0, 0, 0.22) 1px,
+    transparent 1px,
+    transparent 3px
+  );
+  opacity: 0.45;
+}
+
+/* Film grain via SVG turbulence — one tiny data URI, no image request. */
+.grain {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+  opacity: 0.035;
+}
+
+/* Vignette so the CRT has edges. */
+.crt-vignette {
+  background: radial-gradient(
+    ellipse at center,
+    transparent 55%,
+    rgba(0, 0, 0, 0.55) 100%
+  );
+}
+
+/* ============================================================
+   Panels — solid, hard-edged. The anti-glassmorphism.
+   ============================================================ */
+
+.panel {
+  position: relative;
+  background-color: var(--bg-raise);
+  border: 1px solid var(--line);
+  transition:
+    border-color 0.22s ease,
+    background-color 0.22s ease,
+    transform 0.22s ease;
+}
+
+.panel:hover {
+  border-color: var(--line-hot);
+  background-color: var(--bg-hi);
+}
+
+/* Corner ticks — a machined detail that reads as deliberate. */
+.panel-ticks::before,
+.panel-ticks::after {
+  content: "";
+  position: absolute;
+  width: 7px;
+  height: 7px;
+  border-color: var(--amber);
+  opacity: 0;
+  transition: opacity 0.22s ease;
+  pointer-events: none;
+}
+.panel-ticks::before {
+  top: -1px;
+  left: -1px;
+  border-top: 1px solid;
+  border-left: 1px solid;
+}
+.panel-ticks::after {
+  bottom: -1px;
+  right: -1px;
+  border-bottom: 1px solid;
+  border-right: 1px solid;
+}
+.panel-ticks:hover::before,
+.panel-ticks:hover::after {
+  opacity: 1;
+}
+
+/* ============================================================
+   Type
+   ============================================================ */
+
+.font-mono-ui {
+  font-family: var(--font-mono);
+}
+
+/* Bracketed section label: [ 02 — EXPERIENCE ] */
+.slug {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+.slug-num {
+  color: var(--amber);
+}
+
+.display {
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 0.95;
+}
+
+/* Blinking terminal cursor */
+@keyframes caret {
+  0%,
+  49% {
+    opacity: 1;
+  }
+  50%,
+  100% {
+    opacity: 0;
+  }
+}
+.caret::after {
+  content: "\2588";
+  color: var(--amber);
+  margin-left: 0.15em;
+  animation: caret 1.05s steps(1) infinite;
+}
+
+/* ============================================================
+   Controls
+   ============================================================ */
+
+.btn-accent {
+  background-color: var(--amber);
+  color: var(--on-accent);
+  font-family: var(--font-mono);
+  letter-spacing: 0.06em;
+  border: 1px solid var(--amber);
+  transition: background-color 0.18s ease, color 0.18s ease;
+}
+.btn-accent:hover {
+  background-color: transparent;
+  color: var(--amber);
+}
+
+.btn-ghost {
+  font-family: var(--font-mono);
+  letter-spacing: 0.06em;
+  color: var(--ink-dim);
+  border: 1px solid var(--line);
+  background-color: transparent;
+  transition:
+    border-color 0.18s ease,
+    color 0.18s ease;
+}
+.btn-ghost:hover {
+  border-color: var(--amber);
+  color: var(--amber);
+}
+
+.text-accent {
+  color: var(--amber) !important;
+}
+
+/* Nav: a rule that fills with amber on the active section. */
+.nav-item {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  transition: color 0.2s ease;
+  position: relative;
+  padding-left: 22px;
+}
+.nav-item::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 14px;
+  height: 1px;
+  background: currentColor;
+  transform: scaleX(0.35);
+  transform-origin: left;
+  transition: transform 0.24s ease;
+}
+.nav-item:hover {
+  color: var(--ink-dim);
+}
+.nav-item[data-active="true"] {
+  color: var(--amber);
+}
+.nav-item[data-active="true"]::before {
+  transform: scaleX(1);
+}
+
+nav,
+nav button {
+  pointer-events: auto;
+}
+
+button {
+  border: 0;
+}
+button:focus-visible,
+a:focus-visible {
+  outline: 1px solid var(--amber);
+  outline-offset: 2px;
+}
+
+/* ============================================================
+   Layout helpers (kept from before)
+   ============================================================ */
+
 html.snap-enabled,
 body.snap-enabled {
   scroll-snap-type: y mandatory;
 }
 html.snap-enabled section {
-  scroll-snap-align: center; /* center each section in viewport */
-  scroll-snap-stop: always; /* ensure it snaps even on fast flicks */
+  scroll-snap-align: center;
+  scroll-snap-stop: always;
 }
 
-/* On small screens, use proximity snapping to avoid trapping users */
 @media (max-width: 640px) {
   html.snap-enabled,
   body.snap-enabled {
@@ -40,28 +320,25 @@ html.snap-enabled section {
   }
 }
 
-/* Performance: avoid painting offscreen content */
 .content-auto {
   content-visibility: auto;
-  contain-intrinsic-size: 1000px 800px; /* Reserve space to prevent jumps */
+  contain-intrinsic-size: 1000px 800px;
 }
 
-/* Notification slide-in animation */
-@keyframes slide-in {
-  from {
-    transform: translateX(400px);
-    opacity: 0;
+@media (max-width: 768px) {
+  .content-auto {
+    content-visibility: visible;
+    contain-intrinsic-size: auto;
   }
-  to {
-    transform: translateX(0);
-    opacity: 1;
+  .bg-bloom {
+    display: none;
   }
-}
-.animate-slide-in {
-  animation: slide-in 0.3s ease-out forwards;
 }
 
-/* Fade-in animation for overlays */
+/* ============================================================
+   Animation
+   ============================================================ */
+
 @keyframes fade-in {
   from {
     opacity: 0;
@@ -74,121 +351,93 @@ html.snap-enabled section {
   animation: fade-in 0.3s ease-out forwards;
 }
 
-/* Slow ping animation for guide spotlight */
-@keyframes ping-slow {
-  0% {
-    transform: scale(1);
-    opacity: 0.8;
-  }
-  50% {
-    transform: scale(1.2);
-    opacity: 0.4;
-  }
-  100% {
-    transform: scale(1.4);
+@keyframes boot-out {
+  to {
     opacity: 0;
+    visibility: hidden;
   }
 }
-.animate-ping-slow {
-  animation: ping-slow 3s cubic-bezier(0, 0, 0.2, 1) infinite;
-}
 
-/* Bounce animation for arrow pointer */
-@keyframes bounce {
-  0%,
-  100% {
-    transform: translateY(0);
-    animation-timing-function: cubic-bezier(0.8, 0, 1, 1);
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
   }
-  50% {
-    transform: translateY(-10px);
-    animation-timing-function: cubic-bezier(0, 0, 0.2, 1);
+  .caret::after {
+    animation: none;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
   }
 }
-.animate-bounce {
-  animation: bounce 1.5s infinite;
+
+/* ============================================================
+   Content inside panels
+   ============================================================ */
+
+.panel strong {
+  color: var(--ink);
+  font-weight: 600;
 }
 
-/* Theme variables and helpers */
-:root {
-  /* Accent */
-  --accent: #f59e0b; /* Amber */
-  --accent-rgb: 245, 158, 11;
-  --star-rgb: 255, 255, 255; /* default star color */
-  --meteor-rgb: 255, 255, 255; /* default meteor color */
-  --on-accent: #000000;
-
-  /* Gradient stops (default/indigo theme) */
-  --g1: #000000;
-  --g2: #000000;
-  --g3: #000000;
-  --g4: #4b0082; /* indigo */
-  --g5: #000000;
+.panel code {
+  font-family: var(--font-mono);
+  font-size: 0.85em;
+  color: var(--cyan);
+  background: var(--bg-sink);
+  border: 1px solid var(--line);
+  padding: 0.05em 0.35em;
 }
 
-/* Deep Space Indigo — the one hardcoded theme */
-html.theme-indigo {
-  --accent: #f59e0b; /* amber */
-  --on-accent: #000;
-  --g1: #000000;
-  --g2: #070311;
-  --g3: #0a0016;
-  --g4: #4b0082;
-  --g5: #000000;
+/* Square amber markers instead of default bullets. */
+.panel ul.list-disc {
+  list-style: none;
+  padding-left: 1.1rem;
+}
+.panel ul.list-disc > li {
+  position: relative;
+}
+.panel ul.list-disc > li::before {
+  content: "";
+  position: absolute;
+  left: -1.1rem;
+  top: 0.6em;
+  width: 4px;
+  height: 4px;
+  background: var(--amber-dim);
 }
 
-/* Gradient sky layer uses theme variables */
-.gradient-sky {
-  background: linear-gradient(
-    to bottom,
-    var(--g1),
-    var(--g2),
-    var(--g3),
-    var(--g4),
-    var(--g5)
-  );
-  transform: translateY(calc(var(--scroll-y) * -0.05));
-  will-change: transform;
-  z-index: 0;
+/* ============================================================
+   Scroll reveal — CSS-driven.
+   Content is visible by default; the hidden start state only
+   applies once JS has confirmed it can un-hide it (html.js).
+   If scripting fails or rAF stalls, nothing ever disappears.
+   ============================================================ */
+
+.reveal {
+  opacity: 1;
+  transform: none;
 }
 
-/* On small screens, turn off gradient transform and content-visibility to prevent iOS paint bugs */
-@media (max-width: 768px) {
-  .gradient-sky {
+html.js .reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition:
+    opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+html.js .reveal[data-inview="true"] {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html.js .reveal {
+    opacity: 1;
     transform: none;
-    will-change: auto;
-  }
-  .content-auto {
-    content-visibility: visible;
-    contain-intrinsic-size: auto;
+    transition: none;
   }
 }
-
-/* Accent helpers */
-.text-accent {
-  color: var(--accent) !important;
-}
-.btn-accent {
-  background-color: var(--accent);
-  color: var(--on-accent);
-}
-.btn-accent:hover {
-  filter: brightness(1.05);
-}
-
-/* Ensure nav and buttons are clickable */
-nav,
-nav button {
-  pointer-events: auto;
-}
-
-button:focus {
-  outline: none;
-  border: 1px solid yellow;
-  transition: border 0.2s ease-out;
-}
-button {
-  border: 0px;
-  transition: border 0.2s ease-out;
-}
-

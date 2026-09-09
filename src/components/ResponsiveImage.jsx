@@ -43,6 +43,7 @@ export default function ResponsiveImage({
   loading = "lazy",
   decoding = "async",
   fetchPriority,
+  onError,
 }) {
   const resolved = resolveSrc(src);
   const srcSet = widths
@@ -61,6 +62,7 @@ export default function ResponsiveImage({
       className={className}
       loading={loading}
       decoding={decoding}
+      onError={onError}
       {...(fetchPriority ? { fetchPriority } : {})}
     />
   );

@@ -13,9 +13,12 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks: {
-          // Split vendor code for better caching
+          // Split vendor code for better caching.
+          // framer-motion is deliberately NOT listed: only the lazy CaseStudy
+          // modal uses it, so forcing it into a named chunk here would get it
+          // modulepreloaded on first paint. Left alone, Rollup folds it into
+          // that lazy chunk instead.
           "react-vendor": ["react", "react-dom"],
-          "motion-vendor": ["framer-motion"],
           "ui-vendor": ["react-icons", "react-type-animation"],
         },
       },

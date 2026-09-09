@@ -1,4 +1,38 @@
 const projects = [
+  {
+    title: "Image Indexing & Semantic Search",
+    year: 2026,
+    status: "Completed",
+    description:
+      "UB Research project (Feb–Mar 2026): indexed a client's photo archive with InsightFace for face tags and RAM for object tags while keeping CPU load low, then built a hybrid search pipeline that pre-filters candidates in SQLite before running CLIP and FAISS vector search.",
+    tech: ["Python", "FastAPI", "FAISS", "CLIP", "InsightFace", "RAM", "SQLite"],
+    repoLink: "#",
+    caseStudy: {
+      problem:
+        "A client had a large, unlabeled photo archive with no way to find anything in it — no face tags, no object tags, and no semantic search. Running a vision model over the whole archive for every query was far too slow, and the deployment target had no GPU budget.",
+      constraints: [
+        "CPU-only inference — no GPU available for indexing or query time",
+        "Archive scale meant a full vector scan per query was not viable",
+        "Face identity and object content both needed to be searchable",
+        "Natural-language queries, not just tag matching",
+      ],
+      approach:
+        "Indexing pass: ran InsightFace to extract and cluster face embeddings into identity tags, and RAM (Recognize Anything Model) to produce open-vocabulary object tags, batching work to keep CPU load low. Search pass: rather than embedding a query and scanning every vector, the pipeline first pre-filters candidates in SQLite using the structured face and object tags, then runs CLIP embedding + FAISS vector search over only that reduced candidate set. FastAPI serves both the indexing jobs and the query endpoint.",
+      results: [
+        "Face-tagged and object-tagged the full client archive on CPU only",
+        "SQLite pre-filter cuts the FAISS search space before vector comparison",
+        "Natural-language semantic search over the archive via CLIP",
+      ],
+      highlights: [
+        "InsightFace face embedding + identity clustering",
+        "RAM open-vocabulary object tagging",
+        "Two-stage retrieval: SQLite structured pre-filter → CLIP + FAISS",
+        "CPU-friendly batched indexing",
+      ],
+      links: [],
+      images: [],
+    },
+  },
   // New 8 Projects (2025)
   {
     title: "Venyx: Agentic Desktop Productivity OS",
@@ -7,8 +41,6 @@ const projects = [
     description:
       "A Python desktop app built with Flet and a FastAPI backend with MCP (Model Context Protocol) integration that orchestrates Gemini 2.5 Flash to act as a true desktop agent — reading Notion pages, managing files, querying knowledge bases, and executing tasks through a structured tool-call loop.",
     tech: ["Python", "Flet", "FastAPI", "MCP", "Gemini 2.5 Flash"],
-    image:
-      "https://images.unsplash.com/photo-1677442d019cecf8514f0c04e7a36a3d18b440f23?q=80&w=1200&auto=format&fit=crop",
     repoLink: "#",
     caseStudy: {
       problem:
@@ -248,8 +280,6 @@ const projects = [
     description:
       "An advanced MARL system optimizing emergency response coordination in wildfire scenarios, addressing credit assignment and multi-agent communication challenges.",
     tech: ["Python", "Stable Baselines3", "Gymnasium", "PyTorch"],
-    image:
-      "https://images.unsplash.com/photo-1633613286991-611bcede9134?q=80&w=1200&auto=format&fit=crop",
     repoLink: "#",
     caseStudy: {
       problem:
@@ -650,11 +680,11 @@ const projects = [
   // Completed
   {
     title: "HealthAI Connect",
-    year: 2023,
+    year: 2025,
     status: "Completed",
     description:
-      "AI-powered healthcare platform achieving 98.5% diagnostic accuracy using a VGG-16 CNN for medical imaging and a RAG + FAISS retrieval pipeline for medication recommendations. Published in Taylor & Francis AI Frontiers (Oct 2025).",
-    tech: ["Python", "Flask", "VGG-16", "TensorFlow", "FAISS", "RAG", "scikit-learn"],
+      "Multi-modal diagnostic platform with a RAG chatbot over ~9,000 records hitting 98.5% accuracy, backed by a VGG-16 CNN for medical imaging and a LangChain + FAISS retrieval pipeline for medication recommendations. Published in Taylor & Francis AI Frontiers.",
+    tech: ["Python", "Flask", "LangChain", "FAISS", "RAG", "VGG-16", "TensorFlow", "scikit-learn"],
     image:
       "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?q=80&w=1200&auto=format&fit=crop",
     repoLink: "https://github.com/venaxin/HealthAI-Connect",
@@ -671,14 +701,14 @@ const projects = [
       approach:
         "Diagnostic module: Fine-tuned a VGG-16 CNN (TensorFlow/Keras) on chest X-ray and brain MRI datasets for pneumonia and tumor classification. Transfer learning from ImageNet weights allowed high accuracy with limited data. Medication module: Built a RAG pipeline indexing a clinical drug/symptom corpus with FAISS for fast similarity search; a Random Forest classifier handles structured symptom input, with retrieved passages grounding the recommendation. Flask backend exposes both pipelines through a unified REST API.",
       results: [
-        "98.5% diagnostic accuracy across imaging tasks",
+        "98.5% accuracy from the RAG chatbot over ~9,000 records",
         "RAG-grounded medication suggestions eliminate hallucination risk",
         "Published: Taylor & Francis AI Frontiers, October 2025",
         "Sub-second inference latency on CPU (Flask deployment)",
       ],
       highlights: [
         "VGG-16 fine-tuned for tumor & pneumonia classification",
-        "RAG + FAISS retrieval pipeline for medication grounding",
+        "LangChain + FAISS RAG pipeline over ~9,000 clinical records",
         "Random Forest for structured symptom classification",
         "Published research: Taylor & Francis AI Frontiers (Oct 2025)",
         "Unified REST API serving both diagnostic and recommendation modules",
