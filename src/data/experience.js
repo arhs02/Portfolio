@@ -114,6 +114,9 @@ const experience = [
         period: "Apr 2026 – May 2026",
         start: "2026-04",
         end: "2026-05",
+        // Apr and May were both worked in full. A month difference reads that
+        // range as one month elapsed, so the true figure is stated here.
+        months: 2,
         sections: [
           {
             title: "At a glance",
@@ -233,7 +236,10 @@ const experience = [
 /* Whole months between two YYYY-MM points; a null end means "now". This is a
    plain month difference, which is what makes Goodz read as 1 yr 9 mos across
    its two stints and Youro as the 4 months its own resume bullet claims. */
-export function monthsIn(start, end) {
+export function monthsIn(start, end, override) {
+  // A stint may state its own length where the range shorthand understates
+  // the work — an Apr–May engagement is two months, not one.
+  if (typeof override === "number") return override;
   const [sy, sm] = start.split("-").map(Number);
   let ey, em;
   if (end) {
@@ -256,7 +262,7 @@ export function formatMonths(total) {
 
 export function tenure(role) {
   return formatMonths(
-    role.stints.reduce((sum, s) => sum + monthsIn(s.start, s.end), 0),
+    role.stints.reduce((sum, s) => sum + monthsIn(s.start, s.end, s.months), 0),
   );
 }
 

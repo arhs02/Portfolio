@@ -45,7 +45,7 @@ function Card({ role, onOpen, index }) {
         {role.stints.map((st) => (
           <li key={st.period}>
             <span>{st.period}</span>
-            <span>{formatMonths(monthsIn(st.start, st.end))}</span>
+            <span>{formatMonths(monthsIn(st.start, st.end, st.months))}</span>
           </li>
         ))}
       </ul>
@@ -157,7 +157,7 @@ function Detail({ role, onClose }) {
                   </span>
                   <span className="hairline flex-1" />
                   <span className="mark">
-                    {formatMonths(monthsIn(st.start, st.end))}
+                    {formatMonths(monthsIn(st.start, st.end, st.months))}
                   </span>
                 </div>
               )}
