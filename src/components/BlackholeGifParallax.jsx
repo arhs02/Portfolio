@@ -85,8 +85,8 @@ export default function BlackholeGifParallax({
         style={{
           contain: "layout paint",
           contentVisibility: "auto",
-          "--mx": 0,
-          "--my": 0,
+ "--mx": 0,
+ "--my": 0,
         }}
       >
         {/* Backdrop glows to blend with sky - always visible */}
@@ -94,7 +94,7 @@ export default function BlackholeGifParallax({
           className="absolute left-[-12vw] top-[12vh] w-[48vw] h-[48vw] rounded-full blur-3xl"
           style={{
             background:
-              "radial-gradient(closest-side, rgba(255,255,255,0.07), rgba(255,255,255,0))",
+ "radial-gradient(closest-side, rgba(255,255,255,0.07), rgba(255,255,255,0))",
             transform: `translateY(calc(var(--scroll-y, 0px) * -0.025)) translate(calc(var(--mx, 0) * 6px), calc(var(--my, 0) * 4px))`,
             opacity,
           }}
@@ -103,7 +103,7 @@ export default function BlackholeGifParallax({
           className="absolute right-[-10vw] bottom-[-6vh] w-[52vw] h-[52vw] rounded-full blur-3xl"
           style={{
             background:
-              "radial-gradient(closest-side, rgba(255,120,80,0.06), rgba(255,120,80,0))",
+ "radial-gradient(closest-side, rgba(255,120,80,0.06), rgba(255,120,80,0))",
             transform: `translateY(calc(var(--scroll-y, 0px) * -0.04)) translate(calc(var(--mx, 0) * 5px), calc(var(--my, 0) * 7px))`,
             opacity,
           }}
@@ -121,7 +121,7 @@ export default function BlackholeGifParallax({
                 willChange: "transform",
                 opacity,
                 filter:
-                  "hue-rotate(260deg) saturate(1.4) brightness(1.06) drop-shadow(0 6px 28px rgba(190,120,255,0.14))",
+ "hue-rotate(260deg) saturate(1.4) brightness(1.06) drop-shadow(0 6px 28px rgba(190,120,255,0.14))",
                 mixBlendMode: "screen",
               }}
             >
@@ -144,7 +144,7 @@ export default function BlackholeGifParallax({
                 willChange: "transform",
                 opacity,
                 filter:
-                  "hue-rotate(20deg) saturate(1.25) brightness(1.05) drop-shadow(0 8px 36px rgba(255,180,100,0.18))",
+ "hue-rotate(20deg) saturate(1.25) brightness(1.05) drop-shadow(0 8px 36px rgba(255,180,100,0.18))",
                 mixBlendMode: "screen",
               }}
             >
@@ -167,7 +167,7 @@ export default function BlackholeGifParallax({
                 willChange: "transform",
                 opacity,
                 filter:
-                  "hue-rotate(180deg) saturate(1.3) brightness(1.04) drop-shadow(0 8px 34px rgba(120,210,255,0.16))",
+ "hue-rotate(180deg) saturate(1.3) brightness(1.04) drop-shadow(0 8px 34px rgba(120,210,255,0.16))",
                 mixBlendMode: "screen",
               }}
             >
@@ -190,7 +190,7 @@ export default function BlackholeGifParallax({
                 willChange: "transform",
                 opacity,
                 filter:
-                  "hue-rotate(220deg) saturate(1.2) brightness(1.06) drop-shadow(0 6px 28px rgba(150,180,255,0.14))",
+ "hue-rotate(220deg) saturate(1.2) brightness(1.06) drop-shadow(0 6px 28px rgba(150,180,255,0.14))",
                 mixBlendMode: "screen",
               }}
             >
@@ -212,7 +212,7 @@ export default function BlackholeGifParallax({
               className="absolute left-[-5vw] top-[6vh] w-[52vw] h-[52vw] rounded-full blur-3xl"
               style={{
                 background:
-                  "radial-gradient(closest-side, rgba(200,100,255,0.04), transparent)",
+ "radial-gradient(closest-side, rgba(200,100,255,0.04), transparent)",
                 transform: `translateY(calc(var(--scroll-y, 0px) * -0.03))`,
                 opacity: opacity * 0.5,
               }}
@@ -221,7 +221,7 @@ export default function BlackholeGifParallax({
               className="absolute right-[-3vw] top-[20vh] w-[48vw] h-[48vw] rounded-full blur-3xl"
               style={{
                 background:
-                  "radial-gradient(closest-side, rgba(255,150,50,0.04), transparent)",
+ "radial-gradient(closest-side, rgba(255,150,50,0.04), transparent)",
                 transform: `translateY(calc(var(--scroll-y, 0px) * -0.05))`,
                 opacity: opacity * 0.5,
               }}

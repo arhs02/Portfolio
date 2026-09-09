@@ -23,14 +23,14 @@ function ProjectCard({ project, index, onOpenCaseStudy }) {
   const idx = String(index + 1).padStart(2, "0");
 
   return (
-    <article className="panel panel-ticks border-0 flex flex-col text-left">
+    <article className="veil veil-lift flex flex-col text-left overflow-hidden">
       {/* Banner */}
-      <div className="relative aspect-[16/9] w-full overflow-hidden border-b border-[var(--line)] bg-[var(--bg-sink)]">
+      <div className="relative aspect-[16/9] w-full overflow-hidden border-b border-[var(--line)] bg-[rgba(38,48,60,0.05)]">
         {showImage ? (
           <ResponsiveImage
             src={image}
             alt=""
-            className="h-full w-full object-cover opacity-70"
+            className="h-full w-full object-cover"
             widths={[320, 480, 640, 768]}
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
             loading="lazy"
@@ -43,31 +43,28 @@ function ProjectCard({ project, index, onOpenCaseStudy }) {
             className="h-full w-full"
             style={{
               backgroundImage:
-                "repeating-linear-gradient(45deg, var(--line) 0 1px, transparent 1px 9px)",
+ "repeating-linear-gradient(45deg, var(--line-soft) 0 1px, transparent 1px 10px)",
             }}
           />
         )}
 
-        {/* Scrim so the meta row stays legible over light photography. */}
-        <div
-          className="absolute inset-x-0 top-0 h-12 pointer-events-none"
-          style={{
-            background:
-              "linear-gradient(to bottom, rgba(6,6,7,0.85), transparent)",
-          }}
-        />
-        <div className="absolute inset-x-0 top-0 flex items-center justify-between px-3 py-2 font-mono-ui text-[10px] tracking-widest uppercase">
-          <span className="text-[var(--amber)]">{idx}</span>
-          <span className="text-[var(--ink-dim)]">
-            {status}
-            {year ? ` · ${year}` : ""}
-          </span>
-        </div>
       </div>
 
       {/* Content */}
       <div className="flex flex-1 flex-col p-5">
-        <h3 className="display mb-2 text-lg text-[var(--ink)]">{title}</h3>
+        <div
+          className="mb-3 flex items-baseline justify-between gap-3 mark"
+          style={{ letterSpacing: "0.18em" }}
+        >
+          <span>{idx}</span>
+          <span className="truncate">
+            {status}
+            {year ? ` \u00b7 ${year}` : ""}
+          </span>
+        </div>
+        <h3 className="display mb-2 text-2xl leading-tight text-[var(--ink)]">
+          {title}
+        </h3>
         <p className="mb-4 text-sm leading-relaxed text-[var(--ink-dim)]">
           {description}
         </p>
@@ -76,7 +73,7 @@ function ProjectCard({ project, index, onOpenCaseStudy }) {
           {tech.map((t) => (
             <span
               key={t}
-              className="font-mono-ui text-[10px] tracking-wide px-1.5 py-0.5 border border-[var(--line)] text-[var(--ink-faint)]"
+              className="text-[10px] tracking-wide px-1.5 py-0.5 border border-[var(--line)] text-[var(--ink-faint)]"
             >
               {t}
             </span>
@@ -88,9 +85,9 @@ function ProjectCard({ project, index, onOpenCaseStudy }) {
             <button
               type="button"
               onClick={onOpenCaseStudy}
-              className="btn-ghost px-3 py-1.5 text-[11px]"
+              className="btn-line px-3 py-1.5 text-[11px]"
             >
-              CASE STUDY
+              Case study
             </button>
           )}
           {demoLink && demoLink !== "#" && (
@@ -98,9 +95,9 @@ function ProjectCard({ project, index, onOpenCaseStudy }) {
               href={demoLink}
               target="_blank"
               rel="noopener noreferrer"
-              className="btn-ghost inline-flex items-center gap-1.5 px-3 py-1.5 text-[11px]"
+              className="btn-line inline-flex items-center gap-1.5 px-3 py-1.5 text-[11px]"
             >
-              <FiExternalLink size={12} /> DEMO
+              <FiExternalLink size={12} /> Demo
             </a>
           )}
           {repoLink && repoLink !== "#" && (
@@ -108,10 +105,10 @@ function ProjectCard({ project, index, onOpenCaseStudy }) {
               href={repoLink}
               target="_blank"
               rel="noopener noreferrer"
-              className="btn-ghost inline-flex items-center gap-1.5 px-3 py-1.5 text-[11px]"
+              className="btn-line inline-flex items-center gap-1.5 px-3 py-1.5 text-[11px]"
               aria-label={`${title} source on GitHub`}
             >
-              <FaGithub size={12} /> CODE
+              <FaGithub size={12} /> Code
             </a>
           )}
         </div>

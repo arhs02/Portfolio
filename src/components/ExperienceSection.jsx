@@ -1,9 +1,9 @@
 export default function ExperienceSection() {
   return (
-    <div className="w-full max-w-4xl mx-auto text-left space-y-6">
+    <div className="w-full text-left">
 
       {/* RESEARCH AIDE — SUNY */}
-      <div className="panel panel-ticks p-6 md:p-8">
+      <div className="pt-12 mt-12 border-t border-[var(--line)] first:mt-0 first:pt-0 first:border-t-0">
         <header className="mb-4">
           <div className="flex flex-wrap items-baseline justify-between gap-2">
             <h3 className="display text-2xl text-[var(--ink)]">SUNY Research Foundation</h3>
@@ -24,7 +24,7 @@ export default function ExperienceSection() {
         </p>
 
         <section className="mb-6">
-          <h4 className="mb-3 font-mono-ui text-[11px] tracking-[0.18em] uppercase text-[var(--amber)]">At a Glance</h4>
+          <h4 className="mb-3  text-[11px] tracking-[0.18em] uppercase text-[var(--accent)]">At a Glance</h4>
           <ul className="list-disc pl-5 space-y-1 text-[var(--ink-dim)]">
             <li>
               Built a two-tier anomaly detector using small language models across <strong>4.7M+ log lines</strong>, cutting inference latency <strong>78%</strong>.
@@ -36,7 +36,7 @@ export default function ExperienceSection() {
         </section>
 
         <section className="mb-6">
-          <h4 className="mb-3 font-mono-ui text-[11px] tracking-[0.18em] uppercase text-[var(--amber)]">Tier 1: Multi-LoRA Ensemble &amp; Early Latent Fusion</h4>
+          <h4 className="mb-3  text-[11px] tracking-[0.18em] uppercase text-[var(--accent)]">Tier 1: Multi-LoRA Ensemble &amp; Early Latent Fusion</h4>
           <ul className="list-disc pl-5 space-y-1 text-[var(--ink-dim)]">
             <li>
               Designed a Universal Multi-LoRA Engine dynamically hot-swapping Llama-3.2 (1B), Phi-3.5-Mini (3.8B), and GPT-2 (124M) adapters into a single frozen VRAM footprint.
@@ -51,7 +51,7 @@ export default function ExperienceSection() {
         </section>
 
         <section className="mb-6">
-          <h4 className="mb-3 font-mono-ui text-[11px] tracking-[0.18em] uppercase text-[var(--amber)]">Tier 2: Graph-Augmented Agentic RAG &amp; Control Plane</h4>
+          <h4 className="mb-3  text-[11px] tracking-[0.18em] uppercase text-[var(--accent)]">Tier 2: Graph-Augmented Agentic RAG &amp; Control Plane</h4>
           <ul className="list-disc pl-5 space-y-1 text-[var(--ink-dim)]">
             <li>
               Built an asynchronous Tier 2 <strong>Cognitive Judge</strong> using a quantized Llama-3.3-70B-Instruct model to analyze anomalies escalated by Tier 1.
@@ -66,7 +66,7 @@ export default function ExperienceSection() {
         </section>
 
         <section className="mb-6">
-          <h4 className="mb-3 font-mono-ui text-[11px] tracking-[0.18em] uppercase text-[var(--amber)]">Autonomous Swarm &amp; Temporal Physics Tracking</h4>
+          <h4 className="mb-3  text-[11px] tracking-[0.18em] uppercase text-[var(--accent)]">Autonomous Swarm &amp; Temporal Physics Tracking</h4>
           <ul className="list-disc pl-5 space-y-1 text-[var(--ink-dim)]">
             <li>
               Deployed a 3-stage <strong>Hierarchical Multi-Agent Swarm</strong> (Commander, Coder, Critic) powered by Qwen-2.5-Coder to autonomously deduce unseen "Alien" log topologies and generate deterministic Python extraction rules.
@@ -82,7 +82,7 @@ export default function ExperienceSection() {
       </div>
 
       {/* GOODZ — CURRENT */}
-      <div className="panel panel-ticks p-6 md:p-8">
+      <div className="pt-12 mt-12 border-t border-[var(--line)] first:mt-0 first:pt-0 first:border-t-0">
         <header className="mb-4">
           <div className="flex flex-wrap items-baseline justify-between gap-2">
             <h3 className="display text-2xl text-[var(--ink)]">Goodz Pvt. Ltd</h3>
@@ -99,7 +99,7 @@ export default function ExperienceSection() {
         </p>
 
         <section className="mb-6">
-          <h4 className="mb-3 font-mono-ui text-[11px] tracking-[0.18em] uppercase text-[var(--amber)]">
+          <h4 className="mb-3  text-[11px] tracking-[0.18em] uppercase text-[var(--accent)]">
             Live Delivery Tracking — End-to-End Product Ownership
           </h4>
           <ul className="list-disc pl-5 space-y-1 text-[var(--ink-dim)]">
@@ -110,7 +110,7 @@ export default function ExperienceSection() {
         </section>
 
         <section>
-          <h4 className="mb-3 font-mono-ui text-[11px] tracking-[0.18em] uppercase text-[var(--amber)]">
+          <h4 className="mb-3  text-[11px] tracking-[0.18em] uppercase text-[var(--accent)]">
             Customer Order Recommendation System
           </h4>
           <ul className="list-disc pl-5 space-y-1 text-[var(--ink-dim)]">
@@ -125,7 +125,7 @@ export default function ExperienceSection() {
       </div>
 
       {/* YOURO INTERNSHIP */}
-      <div className="panel panel-ticks p-6 md:p-8">
+      <div className="pt-12 mt-12 border-t border-[var(--line)] first:mt-0 first:pt-0 first:border-t-0">
         <header className="mb-4">
           <div className="flex flex-wrap items-baseline justify-between gap-2">
             <h3 className="display text-2xl text-[var(--ink)]">Youro</h3>
@@ -142,7 +142,7 @@ export default function ExperienceSection() {
         </p>
 
         <section className="mb-6">
-          <h4 className="mb-3 font-mono-ui text-[11px] tracking-[0.18em] uppercase text-[var(--amber)]">At a Glance</h4>
+          <h4 className="mb-3  text-[11px] tracking-[0.18em] uppercase text-[var(--accent)]">At a Glance</h4>
           <ul className="list-disc pl-5 space-y-1 text-[var(--ink-dim)]">
             <li>
               Owned full-stack development of a patient-facing urology telehealth platform — authentication, appointment booking, doctor-patient chat, and medication tracking — and shipped it to production in <strong>4 months</strong>.
@@ -161,7 +161,7 @@ export default function ExperienceSection() {
 
         {/* REAL-TIME COMMUNICATION */}
         <section className="mb-6">
-          <h4 className="mb-3 font-mono-ui text-[11px] tracking-[0.18em] uppercase text-[var(--amber)]">
+          <h4 className="mb-3  text-[11px] tracking-[0.18em] uppercase text-[var(--accent)]">
             Real-Time WebSocket Chat System
           </h4>
           <ul className="list-disc pl-5 space-y-1 text-[var(--ink-dim)]">
@@ -169,23 +169,23 @@ export default function ExperienceSection() {
               Built a real-time WebSocket chat system, redesigning data subscription paths to guarantee instant messaging between doctors and patients.
             </li>
             <li>
-              <strong>Root Cause:</strong> Backend sent to user-specific paths (e.g., <code className="text-[var(--amber)]">/user/42/private</code>); mobile client subscribed to generic <code className="text-[var(--amber)]">/user/private</code> — messages arrived on the wrong channel and were silently dropped.
+              <strong>Root Cause:</strong> Backend sent to user-specific paths (e.g., <code className="text-[var(--accent)]">/user/42/private</code>); mobile client subscribed to generic <code className="text-[var(--accent)]">/user/private</code> — messages arrived on the wrong channel and were silently dropped.
             </li>
             <li>
-              <strong>Fix:</strong> In <code className="text-[var(--amber)]">ChatSocket.ts</code>, computed user-specific subscription segment post-authentication and updated all paths. Messages now appear instantly without requiring a manual refresh.
+              <strong>Fix:</strong> In <code className="text-[var(--accent)]">ChatSocket.ts</code>, computed user-specific subscription segment post-authentication and updated all paths. Messages now appear instantly without requiring a manual refresh.
             </li>
             <li>
               <strong>Architecture:</strong> Hybrid "Socket-First with REST Fallback" — WebSockets for live incoming messages, REST API for loading chat history on open.
             </li>
             <li>
-              <strong>Debugging:</strong> Created custom <code className="text-[var(--amber)]">legacyTimestamp</code> formatter to resolve HTTP 400 errors from backend legacy date string requirements.
+              <strong>Debugging:</strong> Created custom <code className="text-[var(--accent)]">legacyTimestamp</code> formatter to resolve HTTP 400 errors from backend legacy date string requirements.
             </li>
           </ul>
         </section>
 
         {/* BACKEND — RATE LIMITER / CRASH FIX */}
         <section className="mb-6">
-          <h4 className="mb-3 font-mono-ui text-[11px] tracking-[0.18em] uppercase text-[var(--amber)]">
+          <h4 className="mb-3  text-[11px] tracking-[0.18em] uppercase text-[var(--accent)]">
             Backend Crash Resolution &amp; Rate Limiting (Spring Boot)
           </h4>
           <ul className="list-disc pl-5 space-y-1 text-[var(--ink-dim)]">
@@ -193,10 +193,10 @@ export default function ExperienceSection() {
               Implemented a sliding-window rate limiter in Java Spring Boot to prevent database overloads, completely resolving server crashes during peak traffic.
             </li>
             <li>
-              <strong>Root Cause 1 — Missing subscriptions:</strong> New patients lacked a subscription record; a raw <code className="text-[var(--amber)]">Optional.get()</code> call in <code className="text-[var(--amber)]">PatientService.java</code> threw <code className="text-[var(--amber)]">NoSuchElementException</code> and crashed the request handler under load. Fixed with just-in-time auto-provisioning.
+              <strong>Root Cause 1 — Missing subscriptions:</strong> New patients lacked a subscription record; a raw <code className="text-[var(--accent)]">Optional.get()</code> call in <code className="text-[var(--accent)]">PatientService.java</code> threw <code className="text-[var(--accent)]">NoSuchElementException</code> and crashed the request handler under load. Fixed with just-in-time auto-provisioning.
             </li>
             <li>
-              <strong>Root Cause 2 — Column overflow:</strong> <code className="text-[var(--amber)]">diagnoses_list</code> string column hit its size limit as patients accumulated diagnoses. Implemented a sliding window that trims the list to the 25 most recent entries before saving — column never overflows.
+              <strong>Root Cause 2 — Column overflow:</strong> <code className="text-[var(--accent)]">diagnoses_list</code> string column hit its size limit as patients accumulated diagnoses. Implemented a sliding window that trims the list to the 25 most recent entries before saving — column never overflows.
             </li>
             <li>
               <strong>Timezone-Aware Scheduling:</strong> Corrected 1-day offset bug in doctor availability by refactoring date extraction to use UTC instants instead of server local time.
@@ -206,7 +206,7 @@ export default function ExperienceSection() {
 
         {/* DASHBOARD & MEMOIZATION */}
         <section className="mb-6">
-          <h4 className="mb-3 font-mono-ui text-[11px] tracking-[0.18em] uppercase text-[var(--amber)]">
+          <h4 className="mb-3  text-[11px] tracking-[0.18em] uppercase text-[var(--accent)]">
             React Native Dashboard — Component Memoization (40% Render Improvement)
           </h4>
           <ul className="list-disc pl-5 space-y-1 text-[var(--ink-dim)]">
@@ -214,13 +214,13 @@ export default function ExperienceSection() {
               Developed the React Native patient dashboard — appointments, symptom scores, care plan progress, state selector — using component memoization to reduce render times by 40% for a fluid UI.
             </li>
             <li>
-              <strong>Problem:</strong> A <code className="text-[var(--amber)]">nowTick</code> timer updating every 30 seconds triggered a full re-render of every card on the screen, even ones with no dependency on the current time.
+              <strong>Problem:</strong> A <code className="text-[var(--accent)]">nowTick</code> timer updating every 30 seconds triggered a full re-render of every card on the screen, even ones with no dependency on the current time.
             </li>
             <li>
-              <strong>Fix:</strong> Wrapped independent cards in <code className="text-[var(--amber)]">React.memo</code>; used <code className="text-[var(--amber)]">useCallback</code> on handler props so memo comparisons didn't see "new" functions on every render.
+              <strong>Fix:</strong> Wrapped independent cards in <code className="text-[var(--accent)]">React.memo</code>; used <code className="text-[var(--accent)]">useCallback</code> on handler props so memo comparisons didn't see "new" functions on every render.
             </li>
             <li>
-              <strong>Stale Closure Fix:</strong> <code className="text-[var(--amber)]">PanResponder</code> gesture handler captured stale state at mount. Fixed by using <code className="text-[var(--amber)]">useRef</code> (<code className="text-[var(--amber)]">symptomModeRef</code>) so gestures always read current state.
+              <strong>Stale Closure Fix:</strong> <code className="text-[var(--accent)]">PanResponder</code> gesture handler captured stale state at mount. Fixed by using <code className="text-[var(--accent)]">useRef</code> (<code className="text-[var(--accent)]">symptomModeRef</code>) so gestures always read current state.
             </li>
             <li>
               <strong>Accessibility:</strong> Redesigned StateChooser from a confusing grid to a single-column, elderly-friendly interface with full state name captions and larger touch targets.
@@ -230,7 +230,7 @@ export default function ExperienceSection() {
 
         {/* DATA LAYER OPTIMIZATION */}
         <section className="mb-6">
-          <h4 className="mb-3 font-mono-ui text-[11px] tracking-[0.18em] uppercase text-[var(--amber)]">
+          <h4 className="mb-3  text-[11px] tracking-[0.18em] uppercase text-[var(--accent)]">
             Network Optimization — 30% Payload Reduction
           </h4>
           <ul className="list-disc pl-5 space-y-1 text-[var(--ink-dim)]">
@@ -238,23 +238,23 @@ export default function ExperienceSection() {
               Cut network payload by 30% and improved app load times by caching data and stripping duplicate API calls.
             </li>
             <li>
-              <strong>Request Deduplication:</strong> Modified <code className="text-[var(--amber)]">ApiClient.ts</code> to track in-flight requests by URL — if a request for the same URL is already running, return the existing Promise instead of starting a new one.
+              <strong>Request Deduplication:</strong> Modified <code className="text-[var(--accent)]">ApiClient.ts</code> to track in-flight requests by URL — if a request for the same URL is already running, return the existing Promise instead of starting a new one.
             </li>
             <li>
               <strong>TTL Caching:</strong> Added Time-To-Live GET response caching using AsyncStorage for infrequently-changing data (state lists, diagnoses catalog, provider lists) — reduces redundant fetches.
             </li>
             <li>
-              <strong>Parallel Bootstrapping:</strong> Replaced sequential startup fetches with <code className="text-[var(--amber)]">Promise.allSettled</code> — profile, subscription, and settings hydrate concurrently; a single failure no longer blocks the whole startup.
+              <strong>Parallel Bootstrapping:</strong> Replaced sequential startup fetches with <code className="text-[var(--accent)]">Promise.allSettled</code> — profile, subscription, and settings hydrate concurrently; a single failure no longer blocks the whole startup.
             </li>
             <li>
-              <strong>Security:</strong> Added sensitive field masking in API logging — any field named <code className="text-[var(--amber)]">password</code>, <code className="text-[var(--amber)]">token</code>, or <code className="text-[var(--amber)]">authorization</code> is replaced with <code className="text-[var(--amber)]">[REDACTED]</code> before logging.
+              <strong>Security:</strong> Added sensitive field masking in API logging — any field named <code className="text-[var(--accent)]">password</code>, <code className="text-[var(--accent)]">token</code>, or <code className="text-[var(--accent)]">authorization</code> is replaced with <code className="text-[var(--accent)]">[REDACTED]</code> before logging.
             </li>
           </ul>
         </section>
 
         {/* TESTING & QA */}
         <section className="mb-6">
-          <h4 className="mb-3 font-mono-ui text-[11px] tracking-[0.18em] uppercase text-[var(--amber)]">
+          <h4 className="mb-3  text-[11px] tracking-[0.18em] uppercase text-[var(--accent)]">
             Engineering Rigor &amp; Quality Control
           </h4>
           <ul className="list-disc pl-5 space-y-1 text-[var(--ink-dim)]">
@@ -262,23 +262,23 @@ export default function ExperienceSection() {
               <strong>Testing Infrastructure:</strong> Established robust unit testing environment using Jest and react-test-renderer.
             </li>
             <li>
-              <strong>Native API Mocking:</strong> Solved "Node environment" limitation for native UI functions by implementing <code className="text-[var(--amber)]">testMeasure</code> prop to inject mock coordinates for components requiring <code className="text-[var(--amber)]">measureInWindow</code>.
+              <strong>Native API Mocking:</strong> Solved "Node environment" limitation for native UI functions by implementing <code className="text-[var(--accent)]">testMeasure</code> prop to inject mock coordinates for components requiring <code className="text-[var(--accent)]">measureInWindow</code>.
             </li>
             <li>
-              <strong>Reliable Queries:</strong> Enforced <code className="text-[var(--amber)]">testID</code> props across codebase to move away from fragile text-based or index-based assertions.
+              <strong>Reliable Queries:</strong> Enforced <code className="text-[var(--accent)]">testID</code> props across codebase to move away from fragile text-based or index-based assertions.
             </li>
             <li>
-              <strong>Conflict Resolution:</strong> Managed massive 21-file merge conflict during Chat/GMeet feature branch integration using strategic <code className="text-[var(--amber)]">git checkout --theirs</code> to preserve feature integrity.
+              <strong>Conflict Resolution:</strong> Managed massive 21-file merge conflict during Chat/GMeet feature branch integration using strategic <code className="text-[var(--accent)]">git checkout --theirs</code> to preserve feature integrity.
             </li>
             <li>
-              <strong>Architecture Migration:</strong> Transitioned Android build from Legacy to New Architecture (TurboModules/Fabric) by modifying <code className="text-[var(--amber)]">gradle.properties</code> and resolving library incompatibilities.
+              <strong>Architecture Migration:</strong> Transitioned Android build from Legacy to New Architecture (TurboModules/Fabric) by modifying <code className="text-[var(--accent)]">gradle.properties</code> and resolving library incompatibilities.
             </li>
           </ul>
         </section>
 
         {/* KEY IMPACT */}
         <section>
-          <h4 className="mb-3 font-mono-ui text-[11px] tracking-[0.18em] uppercase text-[var(--amber)]">Key Impact Summary</h4>
+          <h4 className="mb-3  text-[11px] tracking-[0.18em] uppercase text-[var(--accent)]">Key Impact Summary</h4>
           <ul className="list-disc pl-5 space-y-1 text-[var(--ink-dim)]">
             <li>
               <strong>Zero-Defect Codebase:</strong> Achieved 100% test pass rate and resolved all TypeScript/lint errors across mobile repository.
@@ -294,7 +294,7 @@ export default function ExperienceSection() {
       </div>
 
       {/* GOODZ EXPERIENCE */}
-      <div className="panel panel-ticks p-6 md:p-8">
+      <div className="pt-12 mt-12 border-t border-[var(--line)] first:mt-0 first:pt-0 first:border-t-0">
         <header className="mb-4">
           <div className="flex flex-wrap items-baseline justify-between gap-2">
             <h3 className="display text-2xl text-[var(--ink)]">Goodz Pvt. Ltd</h3>
@@ -311,7 +311,7 @@ export default function ExperienceSection() {
         </p>
 
         <section className="mb-6">
-          <h4 className="mb-3 font-mono-ui text-[11px] tracking-[0.18em] uppercase text-[var(--amber)]">At a Glance</h4>
+          <h4 className="mb-3  text-[11px] tracking-[0.18em] uppercase text-[var(--accent)]">At a Glance</h4>
           <ul className="list-disc pl-5 space-y-1 text-[var(--ink-dim)]">
             <li>
               Engineered the core order service that handles placement, confirmation, dispatch, and delivery for <strong>4,000+ orders a day</strong> on Node.js and PostgreSQL, and hardened it with idempotent transitions to cut stuck-order rates <strong>40%</strong>.
@@ -330,7 +330,7 @@ export default function ExperienceSection() {
 
         {/* WEB DEVELOPMENT */}
         <section className="mb-6">
-          <h4 className="mb-3 font-mono-ui text-[11px] tracking-[0.18em] uppercase text-[var(--amber)]">
+          <h4 className="mb-3  text-[11px] tracking-[0.18em] uppercase text-[var(--accent)]">
             Web Platform Migration &amp; Performance
           </h4>
           <ul className="list-disc pl-5 space-y-1 text-[var(--ink-dim)]">
@@ -338,7 +338,7 @@ export default function ExperienceSection() {
               Led the migration of a legacy HTML/PHP website to Angular, cutting page load times from 8 seconds to under 2 seconds to boost user retention.
             </li>
             <li>
-              <strong>What actually made it fast:</strong> Lazy-loaded images (<code className="text-[var(--amber)]">ng-lazyload</code>), Angular route-level lazy loading (checkout/vendor dashboard modules only load on navigation), and offloading all static assets to AWS S3 + CloudFront.
+              <strong>What actually made it fast:</strong> Lazy-loaded images (<code className="text-[var(--accent)]">ng-lazyload</code>), Angular route-level lazy loading (checkout/vendor dashboard modules only load on navigation), and offloading all static assets to AWS S3 + CloudFront.
             </li>
             <li>
               Built the custom high-performance data grid using Angular CDK VirtualScrollViewport and RxJS, enabling smooth rendering of 50,000+ order records and cutting rendering lag 73% with zero crashes.
@@ -357,7 +357,7 @@ export default function ExperienceSection() {
 
         {/* AWS / INFRA */}
         <section className="mb-6">
-          <h4 className="mb-3 font-mono-ui text-[11px] tracking-[0.18em] uppercase text-[var(--amber)]">
+          <h4 className="mb-3  text-[11px] tracking-[0.18em] uppercase text-[var(--accent)]">
             AWS Infrastructure &amp; Deployment Automation
           </h4>
           <ul className="list-disc pl-5 space-y-1 text-[var(--ink-dim)]">
@@ -365,7 +365,7 @@ export default function ExperienceSection() {
               Reduced server delivery costs by 20% by moving all static asset hosting to AWS S3 and CloudFront with automated deployment scripts.
             </li>
             <li>
-              <strong>Scripts (bash + AWS CLI):</strong> <code className="text-[var(--amber)]">ng build --prod</code> → <code className="text-[var(--amber)]">aws s3 sync dist/ s3://bucket --delete</code> → <code className="text-[var(--amber)]">aws cloudfront create-invalidation</code>. Replaced manual FTP deploys with a one-command repeatable pipeline anyone on the team could run.
+              <strong>Scripts (bash + AWS CLI):</strong> <code className="text-[var(--accent)]">ng build --prod</code> → <code className="text-[var(--accent)]">aws s3 sync dist/ s3://bucket --delete</code> → <code className="text-[var(--accent)]">aws cloudfront create-invalidation</code>. Replaced manual FTP deploys with a one-command repeatable pipeline anyone on the team could run.
             </li>
             <li>
               Improved deployment reliability and collaboration workflows by standardizing version control practices on Bitbucket.
@@ -375,7 +375,7 @@ export default function ExperienceSection() {
 
         {/* MOBILE DEVELOPMENT */}
         <section>
-          <h4 className="mb-3 font-mono-ui text-[11px] tracking-[0.18em] uppercase text-[var(--amber)]">
+          <h4 className="mb-3  text-[11px] tracking-[0.18em] uppercase text-[var(--accent)]">
             React Native Mobile Application
           </h4>
           <ul className="list-disc pl-5 space-y-1 text-[var(--ink-dim)]">
@@ -383,10 +383,10 @@ export default function ExperienceSection() {
               Rebuilt the React Native mobile app's navigation stack using React Navigation, fixing Android back-button exits and iOS swipe gesture glitches. Used the Dimensions API for responsive layouts across a wide range of cheap Android devices.
             </li>
             <li>
-              Integrated Firebase Cloud Messaging (FCM) for real-time driver alerts. Set up custom notification channels — "Order Ready" with distinct sound and high priority, "Delay Update" as lower priority. Fixed a ProGuard/FCM bug where obfuscated class names broke the FCM SDK at runtime by adding explicit keep rules in <code className="text-[var(--amber)]">proguard-rules.pro</code>.
+              Integrated Firebase Cloud Messaging (FCM) for real-time driver alerts. Set up custom notification channels — "Order Ready" with distinct sound and high priority, "Delay Update" as lower priority. Fixed a ProGuard/FCM bug where obfuscated class names broke the FCM SDK at runtime by adding explicit keep rules in <code className="text-[var(--accent)]">proguard-rules.pro</code>.
             </li>
             <li>
-              Reduced the production APK from 45MB to ~34MB (24% smaller) via ProGuard (<code className="text-[var(--amber)]">minifyEnabled true</code>) and asset optimization.
+              Reduced the production APK from 45MB to ~34MB (24% smaller) via ProGuard (<code className="text-[var(--accent)]">minifyEnabled true</code>) and asset optimization.
             </li>
             <li>
               Added delivery tracking maps using OpenStreetMap + Leaflet.js inside a React Native WebView (cost: ~$0 vs. Google Maps Platform). Integrated Supercluster for 50+ delivery pin clustering; markers refresh on tap rather than continuously to keep API call rates low.

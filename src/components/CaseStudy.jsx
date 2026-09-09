@@ -45,7 +45,7 @@ export default function CaseStudy({ project, onClose }) {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        className="fixed inset-0 z-50 bg-[var(--bg-sink)] -sm flex items-center justify-center p-4"
+        className="fixed inset-0 z-50 bg-[rgba(38,48,60,0.05)] -sm flex items-center justify-center p-4"
         onClick={(e) => {
           if (e.target === e.currentTarget) onClose?.();
         }}
@@ -55,7 +55,7 @@ export default function CaseStudy({ project, onClose }) {
           animate={{ y: 0, opacity: 1 }}
           exit={{ y: 20, opacity: 0 }}
           transition={{ type: "spring", stiffness: 260, damping: 24 }}
-          className="relative w-full max-w-5xl max-h-[calc(100vh-2rem)] flex flex-col overflow-hidden rounded-2xl border border-[var(--line)] bg-[var(--bg-raise)] text-[var(--ink)] shadow-xl"
+          className="relative w-full max-w-5xl max-h-[calc(100vh-2rem)] flex flex-col overflow-hidden rounded-2xl border border-[var(--line)] bg-[var(--paper)] text-[var(--ink)] shadow-xl"
         >
           {image && (
             <div className="relative h-56 w-full overflow-hidden flex-shrink-0">
@@ -65,7 +65,7 @@ export default function CaseStudy({ project, onClose }) {
                 className="h-full w-full object-cover"
               />
               {status && (
-                <span className="absolute left-4 top-4 rounded-full bg-[var(--bg-sink)] px-2.5 py-1 text-xs font-medium text-[var(--ink)] ">
+                <span className="absolute left-4 top-4 rounded-full bg-[rgba(38,48,60,0.05)] px-2.5 py-1 text-xs font-medium text-[var(--ink)] ">
                   {status}
                 </span>
               )}
@@ -75,7 +75,7 @@ export default function CaseStudy({ project, onClose }) {
           <button
             aria-label="Close"
             onClick={onClose}
-            className="absolute right-3 top-3 inline-flex h-9 w-9 items-center justify-center rounded-full bg-black/50 hover:bg-[var(--bg-sink)] text-[var(--ink)]"
+            className="absolute right-3 top-3 inline-flex h-9 w-9 items-center justify-center rounded-full bg-black/50 hover:bg-[rgba(38,48,60,0.05)] text-[var(--ink)]"
           >
             <FiX />
           </button>
@@ -90,7 +90,7 @@ export default function CaseStudy({ project, onClose }) {
                     {tech.map((t) => (
                       <span
                         key={t}
-                        className="rounded-md bg-[var(--bg-hi)] px-2 py-1 text-xs"
+                        className="rounded-md bg-[var(--paper)] px-2 py-1 text-xs"
                       >
                         {t}
                       </span>
@@ -104,7 +104,7 @@ export default function CaseStudy({ project, onClose }) {
                     href={demoLink}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 rounded-md btn-accent px-3 py-2 text-sm font-semibold"
+                    className="inline-flex items-center gap-2 rounded-md btn-solid px-3 py-2 text-sm font-semibold"
                   >
                     <FiExternalLink /> Live
                   </a>
@@ -114,7 +114,7 @@ export default function CaseStudy({ project, onClose }) {
                     href={repoLink}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 rounded-md border border-[var(--line)] hover:border-[var(--amber)] px-3 py-2 text-sm font-semibold"
+                    className="inline-flex items-center gap-2 rounded-md border border-[var(--line)] hover:border-[var(--accent)] px-3 py-2 text-sm font-semibold"
                   >
                     <FaGithub /> Code
                   </a>

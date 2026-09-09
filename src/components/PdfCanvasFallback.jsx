@@ -10,7 +10,7 @@ export default function PdfCanvasFallback({ src, height = 0.7 }) {
   useEffect(() => {
     // Configure worker via URL to support Vite bundling
     GlobalWorkerOptions.workerSrc = new URL(
-      "../../node_modules/pdfjs-dist/build/pdf.worker.mjs",
+ "../../node_modules/pdfjs-dist/build/pdf.worker.mjs",
       import.meta.url
     ).toString();
   }, []);

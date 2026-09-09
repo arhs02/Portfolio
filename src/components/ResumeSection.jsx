@@ -24,21 +24,21 @@ export default function ResumeSection({ pdfUrl, showTitle = true }) {
             href={pdfUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 btn-ghost px-3 py-2 text-sm"
+            className="inline-flex items-center gap-2 btn-line px-3 py-2 text-sm"
           >
             <FiExternalLink /> View
           </a>
           <a
             href={pdfUrl}
             download
-            className="btn-accent inline-flex items-center gap-2 px-3 py-2 text-sm"
+            className="btn-solid inline-flex items-center gap-2 px-3 py-2 text-sm"
           >
             <FiDownload /> Download
           </a>
           <button
             type="button"
             onClick={() => window.print()}
-            className="inline-flex items-center gap-2 btn-ghost px-3 py-2 text-sm"
+            className="inline-flex items-center gap-2 btn-line px-3 py-2 text-sm"
           >
             <FiPrinter /> Print
           </button>
@@ -46,7 +46,7 @@ export default function ResumeSection({ pdfUrl, showTitle = true }) {
       </div>
 
       {/* PDF embed with graceful fallback: use canvas-based renderer on iOS or when embedding fails */}
-      <div className="overflow-hidden border border-[var(--line)] bg-[var(--bg-sink)] ">
+      <div className="overflow-hidden border border-[var(--line)] bg-[rgba(38,48,60,0.05)] ">
         {useCanvasFallback ? (
           <PdfCanvasFallback src={pdfUrl} height={0.7} />
         ) : (
