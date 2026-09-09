@@ -1,6 +1,10 @@
 import { useEffect, useRef, useState, useCallback } from "react";
 import { FiX, FiArrowLeft, FiArrowRight } from "react-icons/fi";
-import experience from "../data/experience.js";
+import experience, {
+  tenure,
+  monthsIn,
+  formatMonths,
+} from "../data/experience.js";
 
 /* Renders **bold** and `code` from the plain strings in experience.js, so the
    data file never has to carry raw HTML. */
@@ -17,18 +21,34 @@ function formatBullet(text) {
 }
 
 function Card({ role, onOpen, index }) {
+  const isCurrent = role.stints.some((st) => st.current);
+
   return (
     <article className="exp-card veil veil-lift">
       <div className="flex items-baseline justify-between gap-3">
         <span className="mark">{String(index + 1).padStart(2, "0")}</span>
-        {role.current && <span className="exp-now">Now</span>}
+        {isCurrent && <span className="exp-now">Now</span>}
       </div>
 
       <h3 className="display mt-5 text-3xl leading-none text-[var(--ink)]">
         {role.company}
       </h3>
-      <p className="mt-2 text-sm text-[var(--ink-dim)]">{role.role}</p>
-      <p className="mark mt-1">{role.period}</p>
+
+      <p className="mt-2 text-sm text-[var(--ink-dim)]">
+        {role.role}
+        <span className="exp-tenure">{tenure(role)}</span>
+      </p>
+
+      {/* One employer, two non-contiguous periods: both are listed here so the
+          combined tenure above is never mistaken for a single unbroken run. */}
+      <ul className="exp-periods">
+        {role.stints.map((st) => (
+          <li key={st.period}>
+            <span>{st.period}</span>
+            <span>{formatMonths(monthsIn(st.start, st.end))}</span>
+          </li>
+        ))}
+      </ul>
 
       <p className="mt-5 text-sm leading-relaxed text-[var(--ink-dim)]">
         {role.blurb}
@@ -108,7 +128,7 @@ function Detail({ role, onClose }) {
               {role.project ? ` — ${role.project}` : ""}
             </p>
             <p className="mark mt-1">
-              {role.period} · {role.location}
+              {tenure(role)} · {role.location}
             </p>
           </div>
           <button
@@ -128,17 +148,32 @@ function Detail({ role, onClose }) {
             ))}
           </ul>
 
-          {role.detail.map((sec) => (
-            <section key={sec.title} className="mt-10">
-              <h3 className="mark mb-4" style={{ color: "var(--accent)" }}>
-                {sec.title}
-              </h3>
-              <ul className="list-disc space-y-3 text-sm leading-relaxed text-[var(--ink-dim)]">
-                {sec.bullets.map((b, i) => (
-                  <li key={i}>{formatBullet(b)}</li>
-                ))}
-              </ul>
-            </section>
+          {role.stints.map((st) => (
+            <div key={st.period} className="exp-stint">
+              {role.stints.length > 1 && (
+                <div className="exp-stint-head">
+                  <span className="display text-xl text-[var(--ink)]">
+                    {st.period}
+                  </span>
+                  <span className="hairline flex-1" />
+                  <span className="mark">
+                    {formatMonths(monthsIn(st.start, st.end))}
+                  </span>
+                </div>
+              )}
+              {st.sections.map((sec) => (
+                <section key={sec.title} className="mt-8">
+                  <h3 className="mark mb-4" style={{ color: "var(--accent)" }}>
+                    {sec.title}
+                  </h3>
+                  <ul className="list-disc space-y-3 text-sm leading-relaxed text-[var(--ink-dim)]">
+                    {sec.bullets.map((b, i) => (
+                      <li key={i}>{formatBullet(b)}</li>
+                    ))}
+                  </ul>
+                </section>
+              ))}
+            </div>
           ))}
         </div>
       </div>

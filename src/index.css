@@ -462,7 +462,7 @@ html.snap-enabled section {
 /* ---- Card ---- */
 
 .exp-card {
-  flex: 0 0 clamp(268px, 38vw, 520px);
+  flex: 0 0 clamp(272px, 46vw, 620px);
   display: flex;
   flex-direction: column;
   padding: 26px 24px;
@@ -478,6 +478,58 @@ html.snap-enabled section {
   border: 1px solid var(--accent-soft);
   border-radius: 999px;
   padding: 2px 9px;
+}
+
+/* Tenure sits beside the role, separated by a rule rather than a bullet so
+   it reads as metadata rather than part of the title. */
+.exp-tenure {
+  margin-left: 0.6rem;
+  padding-left: 0.6rem;
+  border-left: 1px solid var(--line);
+  color: var(--ink-faint);
+}
+
+.exp-periods {
+  list-style: none;
+  padding: 0;
+  margin: 0.9rem 0 0;
+  display: grid;
+  gap: 4px;
+}
+.exp-periods li {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  font-size: 0.75rem;
+  color: var(--ink-dim);
+  padding-bottom: 4px;
+  border-bottom: 1px solid var(--line-soft);
+}
+.exp-periods li:last-child {
+  border-bottom: 0;
+}
+.exp-periods li span:last-child {
+  color: var(--ink-faint);
+  white-space: nowrap;
+}
+
+/* Stint separators inside the overlay. */
+.exp-stint + .exp-stint {
+  margin-top: 3rem;
+}
+.exp-stint-head {
+  display: flex;
+  align-items: baseline;
+  gap: 1rem;
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--line);
+}
+.exp-stint:first-child .exp-stint-head {
+  margin-top: 0;
+  padding-top: 0;
+  border-top: 0;
 }
 
 /* ---- Footer controls ---- */
