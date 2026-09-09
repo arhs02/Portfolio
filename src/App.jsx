@@ -50,29 +50,119 @@ function App() {
     };
   }, []);
 
+  /* Drives both nav highlighting and which sections have mounted their
+     content. Deliberately NOT an IntersectionObserver: mounting used to hang
+     off one, so any environment where IO was delayed, throttled or measured a
+     degenerate root left the whole page blank below the hero — sections
+     present in the DOM with zero content in them. Highlighting is allowed to
+     degrade; content is not. */
   useEffect(() => {
     const mountedRef = mountedSectionsRef;
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            setActiveSection(entry.target.id);
-            if (!mountedRef.current.has(entry.target.id)) {
-              mountedRef.current.add(entry.target.id);
-              forceRerender((n) => n + 1);
-            }
+
+    const mountAll = () => {
+      let changed = false;
+      for (const s of sections) {
+        if (!mountedRef.current.has(s.id)) {
+          mountedRef.current.add(s.id);
+          changed = true;
+        }
+      }
+      if (changed) forceRerender((n) => n + 1);
+    };
+
+    const evaluate = () => {
+      const vh = window.innerHeight || document.documentElement.clientHeight;
+
+      // Can't measure the viewport, so we can't reason about what's near it.
+      // Render everything rather than risk showing nothing.
+      if (!vh) {
+        mountAll();
+        return;
+      }
+
+      let changed = false;
+      let nearest = null;
+      let nearestDist = Infinity;
+
+      for (const s of sections) {
+        const el = document.getElementById(s.id);
+        if (!el) continue;
+        const r = el.getBoundingClientRect();
+
+        // Mount anything within about a viewport of the fold, so content is
+        // ready before it is scrolled into view.
+        if (r.top < vh * 1.5 && r.bottom > -vh * 0.5) {
+          if (!mountedRef.current.has(s.id)) {
+            mountedRef.current.add(s.id);
+            changed = true;
           }
-        });
-      },
-      { threshold: 0, rootMargin: "-40% 0px -40% 0px" },
-    );
+        }
 
-    sections.forEach((section) => {
-      const element = document.getElementById(section.id);
-      if (element) observer.observe(element);
-    });
+        if (r.top < vh && r.bottom > 0) {
+          const d = Math.abs((r.top + r.bottom) / 2 - vh / 2);
+          if (d < nearestDist) {
+            nearestDist = d;
+            nearest = s.id;
+          }
+        }
+      }
 
-    return () => observer.disconnect();
+      if (nearest) setActiveSection(nearest);
+      if (changed) forceRerender((n) => n + 1);
+    };
+
+    // Throttled on a timestamp rather than requestAnimationFrame. rAF stalls
+    // whenever the page is throttled or offscreen, and that stall is exactly
+    // what left sections empty before — the same failure the old
+    // framer-motion reveal had. Six getBoundingClientRect reads at 10Hz is
+    // not worth a dependency that can stop firing.
+    let last = 0;
+    let trailing = 0;
+    const THROTTLE = 100;
+
+    const onScroll = () => {
+      const now = performance.now();
+      const since = now - last;
+      if (since >= THROTTLE) {
+        last = now;
+        evaluate();
+      } else if (!trailing) {
+        trailing = setTimeout(() => {
+          trailing = 0;
+          last = performance.now();
+          evaluate();
+        }, THROTTLE - since);
+      }
+    };
+
+    evaluate();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll, { passive: true });
+
+    // Heartbeat, so the page converges even if scroll events never arrive.
+    // Retires itself once everything is mounted, so it costs nothing on a
+    // healthy page after the first scroll-through.
+    const heartbeat = setInterval(() => {
+      if (mountedRef.current.size >= sections.length) {
+        clearInterval(heartbeat);
+        return;
+      }
+      evaluate();
+    }, 1500);
+
+    // Last resort: if measurement is broken rather than merely slow, a slower
+    // page beats an empty one.
+    const failsafe = setTimeout(() => {
+      if (mountedRef.current.size <= 1) mountAll();
+    }, 4000);
+
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+      clearTimeout(trailing);
+      clearInterval(heartbeat);
+      clearTimeout(failsafe);
+    };
   }, [sections]);
 
   const scrollToSection = (id) => {
@@ -83,6 +173,8 @@ function App() {
       block: "start",
     });
   };
+
+  const navHidden = activeSection === "home";
 
   return (
     <div className="relative min-h-screen">
@@ -153,10 +245,16 @@ function App() {
 
       {/* Desktop nav */}
       {/* Kept off the landing so the first screen is scene and nothing else. */}
+      {/* Kept off the landing so the first screen is scene and nothing else.
+          Hiding it with opacity alone left the buttons in the tab order, so
+          keyboard users could focus invisible controls — and aria-hidden over
+          focusable children is its own violation. `inert` removes them from
+          focus, pointer events and the a11y tree together; tabIndex is the
+          fallback for browsers without it. */}
       <nav
         className="nav-rail hidden sm:flex fixed right-9 top-1/2 -translate-y-1/2 flex-col gap-6 z-30"
-        data-hidden={activeSection === "home"}
-        aria-hidden={activeSection === "home"}
+        data-hidden={navHidden}
+        inert={navHidden}
       >
         {sections.map((section) => (
           <button
@@ -165,6 +263,7 @@ function App() {
             data-active={activeSection === section.id}
             className="nav-dot"
             title={section.label}
+            tabIndex={navHidden ? -1 : 0}
           >
             <span className="nav-label">{section.label}</span>
           </button>

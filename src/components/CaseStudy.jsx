@@ -45,7 +45,7 @@ export default function CaseStudy({ project, onClose }) {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        className="fixed inset-0 z-50 bg-[rgba(38,48,60,0.05)] -sm flex items-center justify-center p-4"
+        className="fixed inset-0 z-50 bg-[rgba(38,48,60,0.55)] backdrop-blur-sm flex items-center justify-center p-4"
         onClick={(e) => {
           if (e.target === e.currentTarget) onClose?.();
         }}
@@ -65,7 +65,7 @@ export default function CaseStudy({ project, onClose }) {
                 className="h-full w-full object-cover"
               />
               {status && (
-                <span className="absolute left-4 top-4 rounded-full bg-[rgba(38,48,60,0.05)] px-2.5 py-1 text-xs font-medium text-[var(--ink)] ">
+                <span className="absolute left-4 top-4 rounded-full bg-[var(--paper-veil)] px-2.5 py-1 text-xs font-medium text-[var(--ink)]">
                   {status}
                 </span>
               )}
@@ -75,7 +75,7 @@ export default function CaseStudy({ project, onClose }) {
           <button
             aria-label="Close"
             onClick={onClose}
-            className="absolute right-3 top-3 inline-flex h-9 w-9 items-center justify-center rounded-full bg-black/50 hover:bg-[rgba(38,48,60,0.05)] text-[var(--ink)]"
+            className="absolute right-3 top-3 inline-flex h-9 w-9 items-center justify-center rounded-full bg-[var(--paper-veil)] border border-[var(--line)] text-[var(--ink)] transition-colors hover:text-[var(--accent)]"
           >
             <FiX />
           </button>
@@ -84,13 +84,13 @@ export default function CaseStudy({ project, onClose }) {
           <div className="flex-1 overflow-y-auto overscroll-contain p-6 md:p-8">
             <div className="mb-4 flex flex-wrap items-start justify-between gap-3">
               <div>
-                <h3 className="text-2xl font-semibold">{title}</h3>
+                <h3 className="display text-3xl text-[var(--ink)]">{title}</h3>
                 {tech?.length > 0 && (
                   <div className="mt-2 flex flex-wrap gap-2">
                     {tech.map((t) => (
                       <span
                         key={t}
-                        className="rounded-md bg-[var(--paper)] px-2 py-1 text-xs"
+                        className="rounded-md border border-[var(--line)] px-2 py-1 text-xs text-[var(--ink-dim)]"
                       >
                         {t}
                       </span>

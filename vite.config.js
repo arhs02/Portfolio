@@ -19,7 +19,7 @@ export default defineConfig({
           // modulepreloaded on first paint. Left alone, Rollup folds it into
           // that lazy chunk instead.
           "react-vendor": ["react", "react-dom"],
-          "ui-vendor": ["react-icons", "react-type-animation"],
+          "ui-vendor": ["react-icons"],
         },
       },
     },
