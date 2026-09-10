@@ -3,8 +3,11 @@ import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 
 // https://vite.dev/config/
-// Use BASE_PATH env for GitHub Pages project sites (e.g., /Portfolio-2025/)
-const base = "/Portfolio/";
+// Public base path. GitHub Pages project sites are served from
+// /<repo-name>/, which the deploy workflow passes in as BASE_PATH. The
+// fallback keeps local builds working when it is unset; rename the repo and
+// only the workflow value needs to change.
+const base = process.env.BASE_PATH || "/Portfolio/";
 
 export default defineConfig({
   base,
