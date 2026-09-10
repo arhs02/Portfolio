@@ -1,8 +1,6 @@
 import { useState, useEffect, useRef, useMemo, lazy, Suspense } from "react";
-import { motion, useInView } from "framer-motion";
-import { TypeAnimation } from "react-type-animation";
 import { FaGithub, FaLinkedin, FaEnvelope } from "react-icons/fa";
-import MeteorShower from "./MeteorShower.jsx";
+import UyuniScene from "./components/UyuniScene.jsx";
 const ProjectCardLazy = lazy(() => import("./components/ProjectCard.jsx"));
 const CaseStudyLazy = lazy(() => import("./components/CaseStudy.jsx"));
 const ResumeSectionLazy = lazy(() => import("./components/ResumeSection.jsx"));
@@ -12,18 +10,17 @@ const ExperienceSectionLazy = lazy(
 import projects from "./data/projects.js";
 import resumePdf from "./data/Resume.pdf";
 
+const SECTIONS = [
+  { id: "home", label: "Home", num: "01" },
+  { id: "about", label: "About", num: "02" },
+  { id: "experience", label: "Experience", num: "03" },
+  { id: "resume", label: "Resume", num: "04" },
+  { id: "projects", label: "Projects", num: "05" },
+  { id: "contact", label: "Contact", num: "06" },
+];
+
 function App() {
-  const sections = useMemo(
-    () => [
-      { id: "home", label: "Home" },
-      { id: "about", label: "About" },
-      { id: "experience", label: "Experience" },
-      { id: "resume", label: "Resume" },
-      { id: "projects", label: "Projects" },
-      { id: "contact", label: "Contact" },
-    ],
-    [],
-  );
+  const sections = useMemo(() => SECTIONS, []);
 
   const [activeSection, setActiveSection] = useState("home");
   const [openCaseStudy, setOpenCaseStudy] = useState(null);
@@ -31,20 +28,12 @@ function App() {
   const [prefersReduced, setPrefersReduced] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
 
-  // Mount-on-demand: track which sections have been seen
   const mountedSectionsRef = useRef(new Set(["home"]));
   const isNarrowAtMountRef = useRef(
     typeof window !== "undefined" ? window.innerWidth <= 768 : false,
   );
   const [, forceRerender] = useState(0);
 
-  // Apply indigo theme on mount (hardcoded, no user configuration)
-  useEffect(() => {
-    document.documentElement.classList.add("theme-indigo");
-    return () => document.documentElement.classList.remove("theme-indigo");
-  }, []);
-
-  // Detect prefers-reduced-motion and mobile breakpoint
   useEffect(() => {
     const mqReduced = window.matchMedia("(prefers-reduced-motion: reduce)");
     const mqMobile = window.matchMedia("(max-width: 768px)");
@@ -61,337 +50,242 @@ function App() {
     };
   }, []);
 
-  // Scroll tracking for parallax (rAF-throttled, passive)
-  useEffect(() => {
-    let ticking = false;
-    const handleScroll = () => {
-      if (ticking) return;
-      ticking = true;
-      requestAnimationFrame(() => {
-        document.documentElement.style.setProperty(
-          "--scroll-y",
-          `${window.scrollY}px`,
-        );
-        ticking = false;
-      });
-    };
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
-  // IntersectionObserver for scrollspy + mount-on-demand
+  /* Drives both nav highlighting and which sections have mounted their
+     content. Deliberately NOT an IntersectionObserver: mounting used to hang
+     off one, so any environment where IO was delayed, throttled or measured a
+     degenerate root left the whole page blank below the hero — sections
+     present in the DOM with zero content in them. Highlighting is allowed to
+     degrade; content is not. */
   useEffect(() => {
     const mountedRef = mountedSectionsRef;
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            setActiveSection(entry.target.id);
-            if (!mountedRef.current.has(entry.target.id)) {
-              mountedRef.current.add(entry.target.id);
-              forceRerender((n) => n + 1);
-            }
+
+    const mountAll = () => {
+      let changed = false;
+      for (const s of sections) {
+        if (!mountedRef.current.has(s.id)) {
+          mountedRef.current.add(s.id);
+          changed = true;
+        }
+      }
+      if (changed) forceRerender((n) => n + 1);
+    };
+
+    const evaluate = () => {
+      const vh = window.innerHeight || document.documentElement.clientHeight;
+
+      // Can't measure the viewport, so we can't reason about what's near it.
+      // Render everything rather than risk showing nothing.
+      if (!vh) {
+        mountAll();
+        return;
+      }
+
+      let changed = false;
+      let nearest = null;
+      let nearestDist = Infinity;
+
+      for (const s of sections) {
+        const el = document.getElementById(s.id);
+        if (!el) continue;
+        const r = el.getBoundingClientRect();
+
+        // Mount anything within about a viewport of the fold, so content is
+        // ready before it is scrolled into view.
+        if (r.top < vh * 1.5 && r.bottom > -vh * 0.5) {
+          if (!mountedRef.current.has(s.id)) {
+            mountedRef.current.add(s.id);
+            changed = true;
           }
-        });
-      },
-      { threshold: 0, rootMargin: "-40% 0px -40% 0px" },
-    );
+        }
 
-    sections.forEach((section) => {
-      const element = document.getElementById(section.id);
-      if (element) observer.observe(element);
-    });
+        if (r.top < vh && r.bottom > 0) {
+          const d = Math.abs((r.top + r.bottom) / 2 - vh / 2);
+          if (d < nearestDist) {
+            nearestDist = d;
+            nearest = s.id;
+          }
+        }
+      }
 
-    return () => observer.disconnect();
+      if (nearest) setActiveSection(nearest);
+      if (changed) forceRerender((n) => n + 1);
+    };
+
+    // Throttled on a timestamp rather than requestAnimationFrame. rAF stalls
+    // whenever the page is throttled or offscreen, and that stall is exactly
+    // what left sections empty before — the same failure the old
+    // framer-motion reveal had. Six getBoundingClientRect reads at 10Hz is
+    // not worth a dependency that can stop firing.
+    let last = 0;
+    let trailing = 0;
+    const THROTTLE = 100;
+
+    const onScroll = () => {
+      const now = performance.now();
+      const since = now - last;
+      if (since >= THROTTLE) {
+        last = now;
+        evaluate();
+      } else if (!trailing) {
+        trailing = setTimeout(() => {
+          trailing = 0;
+          last = performance.now();
+          evaluate();
+        }, THROTTLE - since);
+      }
+    };
+
+    evaluate();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll, { passive: true });
+
+    // Heartbeat, so the page converges even if scroll events never arrive.
+    // Retires itself once everything is mounted, so it costs nothing on a
+    // healthy page after the first scroll-through.
+    const heartbeat = setInterval(() => {
+      if (mountedRef.current.size >= sections.length) {
+        clearInterval(heartbeat);
+        return;
+      }
+      evaluate();
+    }, 1500);
+
+    // Last resort: if measurement is broken rather than merely slow, a slower
+    // page beats an empty one.
+    const failsafe = setTimeout(() => {
+      if (mountedRef.current.size <= 1) mountAll();
+    }, 4000);
+
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+      clearTimeout(trailing);
+      clearInterval(heartbeat);
+      clearTimeout(failsafe);
+    };
   }, [sections]);
 
   const scrollToSection = (id) => {
     const element = document.getElementById(id);
     if (!element) return;
-    const rect = element.getBoundingClientRect();
-    const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-    const target =
-      rect.top + scrollTop - (window.innerHeight - rect.height) / 2;
-    window.scrollTo({ top: target, behavior: "smooth" });
+    element.scrollIntoView({
+      behavior: prefersReduced ? "auto" : "smooth",
+      block: "start",
+    });
   };
 
-  // Animation variants for sections
-  const sectionVariants = prefersReduced
-    ? undefined
-    : {
-        hidden: { opacity: 0, y: 50 },
-        visible: {
-          opacity: 1,
-          y: 0,
-          transition: { duration: 0.5, ease: "easeOut" },
-        },
-      };
+  const navHidden = activeSection === "home";
 
   return (
     <div className="relative min-h-screen">
-      {/* Gradient background */}
-      <div className="fixed inset-0 gradient-sky z-0"></div>
-
-      {/* Atmospheric glow — pure CSS, zero texture cost */}
-      <AtmosphericGlow />
-
-      {/* Stars + meteors — always on, respects prefers-reduced-motion */}
-      <MeteorShower disabled={prefersReduced} density={0.7} fps={30} />
+      <UyuniScene reduced={prefersReduced} />
 
       <div className="relative z-20">
         {sections.map((section) => (
           <Section
             key={section.id}
             id={section.id}
-            variants={sectionVariants}
-            isMobile={isMobile}
+            bare={section.id === "home" || section.id === "experience"}
           >
             {(section.id === "projects" ||
               isMobile ||
               isNarrowAtMountRef.current ||
               mountedSectionsRef.current.has(section.id) ||
               section.id === "home") && (
-              <div className="text-center">
-                <h2 className="text-4xl font-bold text-white mb-4">
-                  Abdul Rahman Hussain Siddique
-                </h2>
+              <>
                 {section.id === "home" && (
-                  <div>
-                    <p className="text-lg text-white mb-4">
-                      Welcome to my portfolio! Scroll to explore.
-                    </p>
-                    {prefersReduced ? (
-                      <span className="text-2xl text-yellow-400 font-semibold">
-                        AI-First Software Engineer
-                      </span>
-                    ) : (
-                      <TypeAnimation
-                        sequence={[
-                          "AI-First Software Engineer",
-                          1200,
-                          "ML Systems Architect",
-                          1200,
-                          "Full-Stack Developer",
-                          1200,
-                          "Software Engineer",
-                          1200,
-                        ]}
-                        wrapper="span"
-                        repeat={Infinity}
-                        className="text-2xl text-yellow-400 font-semibold"
-                      />
-                    )}
-                  </div>
+                  <Home onScrollDown={() => scrollToSection("about")} />
                 )}
+
                 {section.id === "about" && (
-                  <div className="max-w-5xl mx-auto grid gap-4 sm:grid-cols-2">
-                    <div className="p-4 rounded-lg border border-white/10 bg-white/5">
-                      <h3 className="text-xl font-semibold mb-2">
-                        AI-First Software Engineer
-                      </h3>
-
-                      <p className="text-sm text-white/80">
-                        CS Master's student at UB and Graduate Research
-                        Assistant building production AI systems, from
-                        ONNX-optimized inference pipelines and RAG-based
-                        retrieval to agentic desktop tools powered by MCP and
-                        Gemini 2.5 Flash. Formerly Software Developer at Goodz
-                        and Youro, where I shipped production Angular, React
-                        Native, and WebSocket systems at scale. I bridge deep ML
-                        engineering with full-stack execution, from model
-                        optimization to polished user interfaces.
-                      </p>
-
-                      <div className="mt-3 flex flex-wrap gap-2 text-xs">
-                        {[
-                          "Python",
-                          "PyTorch",
-                          "FastAPI",
-                          "FAISS",
-                          "ONNX",
-                          "LangChain / LangGraph",
-                          "React / React Native",
-                          "Angular",
-                          "TypeScript",
-                          "AWS (S3, CloudFront)",
-                          "WebSockets / STOMP",
-                          "Tauri / Rust",
-                        ].map((s) => (
-                          <span
-                            key={s}
-                            className="px-2 py-1 rounded border border-white/15"
-                          >
-                            {s}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-
-                    <div className="p-4 rounded-lg border border-white/10 bg-white/5">
-                      <h3 className="text-xl font-semibold mb-2">Now / Next</h3>
-                      <ul className="text-sm text-white/80 space-y-1">
-                        <li>
-                          Now: RA research (VLM pipeline + Tauri desktop app),
-                          Venyx MCP agent, LifeLogger.
-                        </li>
-                        <li>
-                          Next: Seeking AI/ML or Software Engineering roles —
-                          Summer / Fall 2026.
-                        </li>
-                      </ul>
-                      <div className="mt-3 flex flex-wrap gap-3">
-                        <a
-                          href={resumePdf}
-                          className="btn-accent rounded-md px-3 py-1 text-xs"
-                        >
-                          Resume
-                        </a>
-                        <a
-                          href="mailto:abdulrahman.hussain02@gmail.com"
-                          className="rounded-md border border-white/20 hover:border-white/40 px-3 py-1 text-xs"
-                        >
-                          Email
-                        </a>
-                        <a
-                          href="https://linkedin.com/in/abdul-rahman-hussain"
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="rounded-md border border-white/20 hover:border-white/40 px-3 py-1 text-xs"
-                        >
-                          LinkedIn
-                        </a>
-                      </div>
-                    </div>
-                    <div className="p-4 rounded-lg border border-white/10 bg-white/5 sm:col-span-2">
-                      <h3 className="text-xl font-semibold mb-2">
-                        What I care about
-                      </h3>
-                      <div className="grid sm:grid-cols-3 gap-3 text-sm text-white/80">
-                        <div>
-                          <div className="font-medium text-white">
-                            Systems that scale
-                          </div>
-                          <p className="text-white/70">
-                            Inference optimization, memory-safe pipelines, and
-                            production-grade AI that doesn't break under load.
-                          </p>
-                        </div>
-                        <div>
-                          <div className="font-medium text-white">
-                            Reliable & Tested
-                          </div>
-                          <p className="text-white/70">
-                            Clean architecture, meaningful tests, performance
-                            budgets — from unit tests to CI/CD build pipelines.
-                          </p>
-                        </div>
-                        <div>
-                          <div className="font-medium text-white">Impact</div>
-                          <p className="text-white/70">
-                            Shipping AI features that solve real user problems —
-                            not demos, but deployed systems.
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+                  <Panel num={section.num} label={section.label}>
+                    <About />
+                  </Panel>
                 )}
+
                 {section.id === "experience" && (
-                  <Suspense
-                    fallback={<div className="text-white/70">Loading…</div>}
-                  >
+                  <Suspense fallback={<Loading />}>
                     <ExperienceSectionLazy />
                   </Suspense>
                 )}
+
                 {section.id === "resume" && (
-                  <div className="max-w-6xl mx-auto">
-                    <Suspense
-                      fallback={<div className="text-white/70">Loading…</div>}
-                    >
+                  <Panel num={section.num} label={section.label} wide>
+                    <Suspense fallback={<Loading />}>
                       <ResumeSectionLazy pdfUrl={resumePdf} showTitle={false} />
                     </Suspense>
-                  </div>
+                  </Panel>
                 )}
+
                 {section.id === "projects" && (
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
-                    <Suspense
-                      fallback={<div className="text-white/70">Loading…</div>}
-                    >
-                      {projects.map((p, i) => (
-                        <ProjectCardLazy
-                          key={p.title}
-                          project={p}
-                          index={i}
-                          onOpenCaseStudy={() => setOpenCaseStudy(p)}
-                        />
-                      ))}
-                    </Suspense>
-                  </div>
-                )}
-                {section.id === "contact" && (
-                  <div>
-                    <p className="text-lg text-white mb-4">
-                      Reach out to me via email or social media!
-                    </p>
-                    <div className="flex justify-center gap-6">
-                      <a
-                        href="mailto:abdulrahman.hussain02@gmail.com"
-                        className="text-white hover:text-yellow-400 transition-colors"
-                        aria-label="Send me an email"
-                      >
-                        <FaEnvelope size={32} />
-                      </a>
-                      <a
-                        href="https://linkedin.com/in/abdul-rahman-hussain"
-                        className="text-white hover:text-yellow-400 transition-colors"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        aria-label="Visit my LinkedIn profile"
-                      >
-                        <FaLinkedin size={32} />
-                      </a>
+                  <Panel num={section.num} label={section.label} wide>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+                      <Suspense fallback={<Loading />}>
+                        {projects.map((p, i) => (
+                          <ProjectCardLazy
+                            key={p.title}
+                            project={p}
+                            index={i}
+                            onOpenCaseStudy={() => setOpenCaseStudy(p)}
+                          />
+                        ))}
+                      </Suspense>
                     </div>
-                  </div>
+                  </Panel>
                 )}
-              </div>
+
+                {section.id === "contact" && (
+                  <Panel num={section.num} label={section.label}>
+                    <Contact />
+                  </Panel>
+                )}
+              </>
             )}
           </Section>
         ))}
       </div>
 
-      {/* Desktop sidebar nav */}
-      <nav className="hidden sm:flex fixed right-4 top-1/2 -translate-y-1/2 flex-col space-y-4 z-20">
+      {/* Desktop nav */}
+      {/* Kept off the landing so the first screen is scene and nothing else. */}
+      {/* Kept off the landing so the first screen is scene and nothing else.
+          Hiding it with opacity alone left the buttons in the tab order, so
+          keyboard users could focus invisible controls — and aria-hidden over
+          focusable children is its own violation. `inert` removes them from
+          focus, pointer events and the a11y tree together; tabIndex is the
+          fallback for browsers without it. */}
+      <nav
+        className="nav-rail hidden sm:flex fixed right-9 top-1/2 -translate-y-1/2 flex-col gap-6 z-30"
+        data-hidden={navHidden}
+        inert={navHidden}
+      >
         {sections.map((section) => (
           <button
             key={section.id}
             onClick={() => scrollToSection(section.id)}
-            className={`text-sm font-medium transition-colors ${
-              activeSection === section.id
-                ? "text-accent"
-                : "text-white hover:text-gray-300"
-            } focus:outline-none focus:ring-2 focus:ring-white/30`}
+            data-active={activeSection === section.id}
+            className="nav-dot"
+            title={section.label}
+            tabIndex={navHidden ? -1 : 0}
           >
-            {section.label}
+            <span className="nav-label">{section.label}</span>
           </button>
         ))}
       </nav>
 
-      {/* Mobile sections button + panel */}
+      {/* Mobile nav */}
       <button
         onClick={() => setMobileNavOpen((v) => !v)}
-        className="sm:hidden fixed bottom-4 left-4 z-30 rounded-full border border-white/20 bg-black/60 backdrop-blur px-3 py-2 text-sm text-white hover:border-white/40"
-        title="Sections"
+        className="sm:hidden fixed bottom-5 right-5 z-40 veil px-4 py-2.5 text-[11px] tracking-[0.2em] uppercase text-[var(--ink)]"
       >
-        Sections
+        {mobileNavOpen ? "Close" : "Menu"}
       </button>
       {mobileNavOpen && (
         <div
-          className="sm:hidden fixed bottom-16 left-4 z-30 w-[min(92vw,360px)] rounded-xl border border-white/10 bg-black/70 backdrop-blur-md p-3 text-white shadow-2xl"
+          className="sm:hidden fixed bottom-20 right-5 z-40 w-[min(88vw,300px)] veil p-5"
           role="dialog"
           aria-label="Sections"
         >
-          <div className="mb-2 text-base font-semibold">Sections</div>
-          <div className="grid grid-cols-2 gap-2">
+          <div className="flex flex-col gap-4">
             {sections.map((s) => (
               <button
                 key={s.id}
@@ -399,28 +293,26 @@ function App() {
                   setMobileNavOpen(false);
                   scrollToSection(s.id);
                 }}
-                className={`text-xs px-2 py-2 rounded-md border ${
-                  activeSection === s.id
-                    ? "border-white/40 text-accent"
-                    : "border-white/20 hover:border-white/40"
-                }`}
+                className="flex items-baseline gap-3 text-left"
               >
-                {s.label}
+                <span className="mark" style={{ letterSpacing: "0.2em" }}>
+                  {s.num}
+                </span>
+                <span
+                  className="display text-2xl"
+                  style={{
+                    color:
+                      activeSection === s.id ? "var(--accent)" : "var(--ink)",
+                  }}
+                >
+                  {s.label}
+                </span>
               </button>
             ))}
-          </div>
-          <div className="mt-3 flex justify-end">
-            <button
-              onClick={() => setMobileNavOpen(false)}
-              className="text-xs px-3 py-1 rounded-md border border-white/20 hover:border-white/40"
-            >
-              Close
-            </button>
           </div>
         </div>
       )}
 
-      {/* Case Study Modal */}
       <Suspense fallback={null}>
         <CaseStudyLazy
           project={openCaseStudy}
@@ -431,86 +323,266 @@ function App() {
   );
 }
 
-// Lightweight pure-CSS atmospheric glow — replaces animated GIF parallax.
-// Each div is a radial-gradient promoted to its own compositor layer.
-// Transform changes on scroll are handled entirely on the GPU.
-function AtmosphericGlow() {
+/* ============================================================
+   Chrome
+   ============================================================ */
+
+function Loading() {
+  return <div className="mark py-16 text-center">Loading</div>;
+}
+
+/* Every section except the hero sits on a paper veil so text stays
+   readable over whatever the sky happens to be doing behind it. */
+function Panel({ num, label, wide, children }) {
   return (
-    <div
-      className="pointer-events-none fixed inset-0 z-[4] hidden sm:block"
-      aria-hidden="true"
-    >
-      {/* Violet nebula — upper left */}
-      <div
-        className="absolute rounded-full"
-        style={{
-          left: "-8vw",
-          top: "4vh",
-          width: "55vw",
-          height: "55vw",
-          background:
-            "radial-gradient(closest-side, rgba(120,40,200,0.22), transparent)",
-          transform: "translateY(calc(var(--scroll-y, 0px) * -0.025))",
-          willChange: "transform",
-        }}
-      />
-      {/* Amber accent — right side */}
-      <div
-        className="absolute rounded-full"
-        style={{
-          right: "-6vw",
-          top: "28vh",
-          width: "48vw",
-          height: "48vw",
-          background:
-            "radial-gradient(closest-side, rgba(245,158,11,0.10), transparent)",
-          transform: "translateY(calc(var(--scroll-y, 0px) * -0.04))",
-          willChange: "transform",
-        }}
-      />
-      {/* Deep indigo — bottom center */}
-      <div
-        className="absolute rounded-full"
-        style={{
-          left: "22vw",
-          bottom: "-8vh",
-          width: "52vw",
-          height: "52vw",
-          background:
-            "radial-gradient(closest-side, rgba(75,0,130,0.28), transparent)",
-          transform: "translateY(calc(var(--scroll-y, 0px) * -0.015))",
-          willChange: "transform",
-        }}
-      />
+    <div className={`mx-auto w-full ${wide ? "max-w-6xl" : "max-w-3xl"}`}>
+      <div className="veil px-6 py-10 sm:px-12 sm:py-14">
+        <div className="stagger">
+          <div className="mb-10 flex items-baseline gap-4">
+            <span className="mark">{num}</span>
+            <span className="hairline flex-1" />
+            <span className="display text-3xl sm:text-4xl text-[var(--ink)]">
+              {label}
+            </span>
+          </div>
+          <div>{children}</div>
+        </div>
+      </div>
     </div>
   );
 }
 
-// Section component with animation
-function Section({ id, children, variants, isMobile }) {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, amount: 0 });
-  const enableAnim = variants && !isMobile;
-  const initialIsNarrow =
-    typeof window !== "undefined" ? window.innerWidth <= 768 : false;
-  const initialState = enableAnim && !initialIsNarrow ? "hidden" : "visible";
-  const animateState = enableAnim
-    ? isInView
-      ? "visible"
-      : "hidden"
-    : "visible";
+/* ============================================================
+   Hero
+   ============================================================ */
+
+function Home({ onScrollDown }) {
+  return (
+    <div className="relative flex min-h-screen w-full flex-col items-center text-center animate-fade-in">
+      {/* The shader puts the waterline at 48% from the top. Everything here
+          has to finish above it, or it lands in the glare. */}
+      <div className="w-full px-6 pt-[13vh] sm:px-28">
+        <p
+          className="on-sky-dim mb-7 text-[10px] sm:text-[11px]"
+          style={{ letterSpacing: "0.44em", textTransform: "uppercase" }}
+        >
+          Software Engineer
+        </p>
+
+        <h1 className="display on-sky text-[clamp(2.6rem,7.5vw,6.5rem)]">
+          Abdul Rahman
+          <br />
+          <span className="display-em">Hussain Siddique</span>
+        </h1>
+
+        <p className="on-sky-dim mx-auto mt-7 max-w-md text-[13px] sm:text-sm leading-relaxed">
+          I build systems that carry real traffic — order pipelines, delivery
+          tracking, recommenders, and retrieval stacks that stay up when they
+          matter.
+        </p>
+      </div>
+
+      <button
+        onClick={onScrollDown}
+        className="drift absolute bottom-12 flex flex-col items-center gap-3"
+        aria-label="Scroll to about"
+      >
+        <span
+          className="on-sky-dim text-[9px]"
+          style={{ letterSpacing: "0.4em", textTransform: "uppercase" }}
+        >
+          Scroll
+        </span>
+        <span className="block h-10 w-px bg-white/50" />
+      </button>
+    </div>
+  );
+}
+
+/* ============================================================
+   Sections
+   ============================================================ */
+
+function About() {
+  return (
+    <div className="space-y-12">
+      <p className="display text-xl sm:text-2xl leading-snug text-[var(--ink)]">
+        Software Engineer at Goodz, building production AI and backend systems —
+        live delivery tracking on GPS ingestion and WebSockets, a two-tower
+        PyTorch recommender, and order services handling thousands of orders a
+        day on Node.js and PostgreSQL. Previously shipped a urology telehealth
+        platform at Youro, including an LLM + RAG diagnosis-assist tool.
+      </p>
+
+      <div>
+        <h3 className="mark mb-5">Toolkit</h3>
+        <div className="flex flex-wrap gap-x-5 gap-y-2 text-sm text-[var(--ink-dim)]">
+          {[
+            "Python",
+            "PyTorch",
+            "Node.js",
+            "FastAPI",
+            "Spring Boot",
+            "PostgreSQL",
+            "Redis",
+            "Kafka",
+            "Docker",
+            "React / React Native",
+            "TypeScript",
+            "LangChain / RAG",
+            "FAISS",
+            "AWS",
+            "Neo4j",
+          ].map((s) => (
+            <span key={s}>{s}</span>
+          ))}
+        </div>
+      </div>
+
+      <div>
+        <h3 className="mark mb-5">Education</h3>
+        <ul className="space-y-4 text-sm text-[var(--ink-dim)]">
+          <li className="flex flex-wrap items-baseline justify-between gap-2">
+            <span>
+              <span className="text-[var(--ink)]">
+                University at Buffalo, SUNY
+              </span>{" "}
+              — MS, Computer Science and Engineering
+            </span>
+            <span className="mark">May 2026</span>
+          </li>
+          <li className="flex flex-wrap items-baseline justify-between gap-2">
+            <span>
+              <span className="text-[var(--ink)]">Osmania University</span> —
+              BE, Information Technology
+            </span>
+            <span className="mark">Jun 2024</span>
+          </li>
+        </ul>
+      </div>
+
+      <div className="flex flex-wrap gap-3">
+        <a href={resumePdf} className="btn-solid px-5 py-2.5">
+          Resume
+        </a>
+        <a href="mailto:arhsiddq@gmail.com" className="btn-line px-5 py-2.5">
+          Email
+        </a>
+        <a
+          href="https://github.com/arhs02"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="btn-line px-5 py-2.5"
+        >
+          GitHub
+        </a>
+      </div>
+    </div>
+  );
+}
+
+function Contact() {
+  const links = [
+    {
+      href: "mailto:arhsiddq@gmail.com",
+      Icon: FaEnvelope,
+      label: "Email",
+      sub: "arhsiddq@gmail.com",
+    },
+    {
+      href: "https://linkedin.com/in/rahman-hussain",
+      Icon: FaLinkedin,
+      label: "LinkedIn",
+      sub: "/in/rahman-hussain",
+    },
+    {
+      href: "https://github.com/arhs02",
+      Icon: FaGithub,
+      label: "GitHub",
+      sub: "/arhs02",
+    },
+  ];
 
   return (
-    <motion.section
+    <div>
+      <p className="display text-2xl sm:text-3xl mb-10 text-[var(--ink)]">
+        Always glad to talk about <span className="display-em">systems</span>,
+        or anything you are building.
+      </p>
+      <div className="divide-y" style={{ borderColor: "var(--line)" }}>
+        {links.map(({ href, Icon, label, sub }) => (
+          <a
+            key={label}
+            href={href}
+            target={href.startsWith("mailto") ? undefined : "_blank"}
+            rel="noopener noreferrer"
+            className="group flex items-center gap-5 py-5"
+            style={{ borderTop: "1px solid var(--line)" }}
+          >
+            <Icon
+              size={16}
+              className="shrink-0 text-[var(--ink-faint)] transition-colors group-hover:text-[var(--accent)]"
+            />
+            <span className="display text-2xl text-[var(--ink)] transition-colors group-hover:text-[var(--accent)]">
+              {label}
+            </span>
+            <span className="ml-auto text-xs text-[var(--ink-faint)]">
+              {sub}
+            </span>
+          </a>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/* ============================================================
+   Section wrapper
+   ============================================================ */
+
+function Section({ id, children, bare }) {
+  const ref = useRef(null);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+
+    // Whatever happens with the observer, this section becomes visible.
+    const failsafe = setTimeout(() => {
+      el.setAttribute("data-inview", "true");
+    }, 2500);
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          el.setAttribute("data-inview", "true");
+          observer.disconnect();
+          clearTimeout(failsafe);
+        }
+      },
+      { rootMargin: "0px 0px -10% 0px" },
+    );
+    observer.observe(el);
+
+    return () => {
+      observer.disconnect();
+      clearTimeout(failsafe);
+    };
+  }, []);
+
+  return (
+    <section
       ref={ref}
       id={id}
-      className="min-h-screen flex items-center justify-center p-[10%] content-auto"
-      variants={enableAnim ? variants : undefined}
-      initial={initialState}
-      animate={animateState}
+      className={
+        bare
+          ? "reveal min-h-screen"
+          : "reveal min-h-screen flex items-center px-5 sm:pl-10 sm:pr-24 lg:pl-20 lg:pr-28 py-28"
+      }
+      data-inview={bare ? "true" : undefined}
     >
       {children}
-    </motion.section>
+    </section>
   );
 }
 

@@ -31,7 +31,10 @@ jobs:
           cache: npm
 
       - name: Install dependencies
-        run: npm install
+        # ci, not install: installs the lockfile exactly and fails if
+        # package.json and the lockfile disagree, so the deploy can't quietly
+        # resolve different versions than were tested locally.
+        run: npm ci
 
       - name: Build
         env:

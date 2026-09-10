@@ -3,8 +3,11 @@ import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 
 // https://vite.dev/config/
-// Use BASE_PATH env for GitHub Pages project sites (e.g., /Portfolio-2025/)
-const base = "/Portfolio/";
+// Public base path. GitHub Pages project sites are served from
+// /<repo-name>/, which the deploy workflow passes in as BASE_PATH. The
+// fallback keeps local builds working when it is unset; rename the repo and
+// only the workflow value needs to change.
+const base = process.env.BASE_PATH || "/Portfolio/";
 
 export default defineConfig({
   base,
@@ -13,10 +16,13 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks: {
-          // Split vendor code for better caching
+          // Split vendor code for better caching.
+          // framer-motion is deliberately NOT listed: only the lazy CaseStudy
+          // modal uses it, so forcing it into a named chunk here would get it
+          // modulepreloaded on first paint. Left alone, Rollup folds it into
+          // that lazy chunk instead.
           "react-vendor": ["react", "react-dom"],
-          "motion-vendor": ["framer-motion"],
-          "ui-vendor": ["react-icons", "react-type-animation"],
+          "ui-vendor": ["react-icons"],
         },
       },
     },

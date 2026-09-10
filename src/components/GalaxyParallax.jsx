@@ -56,9 +56,9 @@ export default function GalaxyParallax({ disabled = false, opacity = 0.14 }) {
   // Soft edge mask for nicer blending
   const maskStyle = {
     WebkitMaskImage:
-      "radial-gradient(closest-side, rgba(0,0,0,1), rgba(0,0,0,0.0) 75%)",
+ "radial-gradient(closest-side, rgba(0,0,0,1), rgba(0,0,0,0.0) 75%)",
     maskImage:
-      "radial-gradient(closest-side, rgba(0,0,0,1), rgba(0,0,0,0.0) 75%)",
+ "radial-gradient(closest-side, rgba(0,0,0,1), rgba(0,0,0,0.0) 75%)",
   };
 
   return (
@@ -68,8 +68,8 @@ export default function GalaxyParallax({ disabled = false, opacity = 0.14 }) {
       style={{
         contain: "layout paint",
         contentVisibility: "auto",
-        "--mx": 0,
-        "--my": 0,
+ "--mx": 0,
+ "--my": 0,
       }}
     >
       {/* Cool blue galaxy - upper left */}
@@ -77,7 +77,7 @@ export default function GalaxyParallax({ disabled = false, opacity = 0.14 }) {
         className="absolute left-[-8vw] top-[6vh]"
         style={{
           transform:
-            "translateY(calc(var(--scroll-y, 0px) * -0.03)) translate(calc(var(--mx, 0) * 8px), calc(var(--my, 0) * 6px)) rotate(-4deg)",
+ "translateY(calc(var(--scroll-y, 0px) * -0.03)) translate(calc(var(--mx, 0) * 8px), calc(var(--my, 0) * 6px)) rotate(-4deg)",
           willChange: "transform",
           opacity,
           mixBlendMode: "screen",
@@ -101,7 +101,7 @@ export default function GalaxyParallax({ disabled = false, opacity = 0.14 }) {
         className="absolute right-[-6vw] top-[24vh]"
         style={{
           transform:
-            "translateY(calc(var(--scroll-y, 0px) * -0.045)) translate(calc(var(--mx, 0) * 10px), calc(var(--my, 0) * 8px)) rotate(6deg)",
+ "translateY(calc(var(--scroll-y, 0px) * -0.045)) translate(calc(var(--mx, 0) * 10px), calc(var(--my, 0) * 8px)) rotate(6deg)",
           willChange: "transform",
           opacity: Math.max(0, opacity - 0.02),
           mixBlendMode: "screen",
@@ -125,7 +125,7 @@ export default function GalaxyParallax({ disabled = false, opacity = 0.14 }) {
         className="absolute left-[-12vw] bottom-[-6vh]"
         style={{
           transform:
-            "translateY(calc(var(--scroll-y, 0px) * -0.028)) translate(calc(var(--mx, 0) * 6px), calc(var(--my, 0) * 10px)) rotate(8deg)",
+ "translateY(calc(var(--scroll-y, 0px) * -0.028)) translate(calc(var(--mx, 0) * 6px), calc(var(--my, 0) * 10px)) rotate(8deg)",
           willChange: "transform",
           opacity: Math.max(0, opacity - 0.04),
           mixBlendMode: "screen",

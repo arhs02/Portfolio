@@ -1,97 +1,115 @@
+import { useState } from "react";
 import ResponsiveImage from "./ResponsiveImage.jsx";
 import { FaGithub } from "react-icons/fa";
-import { FiActivity, FiTrendingUp, FiShield, FiExternalLink } from "react-icons/fi";
+import { FiExternalLink } from "react-icons/fi";
 
 function ProjectCard({ project, index, onOpenCaseStudy }) {
-  const { title, description, tech = [], image, demoLink, repoLink, status, metrics } = project;
+  const {
+    title,
+    description,
+    tech = [],
+    image,
+    demoLink,
+    repoLink,
+    status,
+    year,
+  } = project;
+
+  // Remote images rot. A dead URL should fall back to the hatch pattern, not
+  // dump alt text across the card header.
+  const [imageBroken, setImageBroken] = useState(false);
+  const showImage = image && !imageBroken;
+
+  const idx = String(index + 1).padStart(2, "0");
 
   return (
-    <article className="relative overflow-hidden rounded-2xl border border-white/10 bg-black/40 hover:border-white/25 hover:bg-black/50 transition-colors duration-200">
-      {/* Image / banner */}
-      <div className="relative aspect-[16/9] w-full overflow-hidden">
-        {image ? (
+    <article className="veil veil-lift flex flex-col text-left overflow-hidden">
+      {/* Banner */}
+      <div className="relative aspect-[16/9] w-full overflow-hidden border-b border-[var(--line)] bg-[rgba(38,48,60,0.05)]">
+        {showImage ? (
           <ResponsiveImage
             src={image}
-            alt={title}
+            alt=""
             className="h-full w-full object-cover"
             widths={[320, 480, 640, 768]}
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
             loading="lazy"
             decoding="async"
+            onError={() => setImageBroken(true)}
           />
         ) : (
-          <div className="h-full w-full bg-gradient-to-br from-purple-900/60 via-indigo-900/40 to-amber-900/30" />
+          /* No image: a technical hatch pattern instead of a stock photo. */
+          <div
+            className="h-full w-full"
+            style={{
+              backgroundImage:
+ "repeating-linear-gradient(45deg, var(--line-soft) 0 1px, transparent 1px 10px)",
+            }}
+          />
         )}
-        {status && (
-          <span className="absolute left-3 top-3 rounded-full bg-black/70 px-2.5 py-1 text-xs font-medium text-white">
-            {status}
-          </span>
-        )}
+
       </div>
 
       {/* Content */}
-      <div className="p-5">
-        <h3 className="mb-2 text-lg font-semibold text-white">{title}</h3>
-        <p className="mb-4 text-sm text-gray-300">{description}</p>
+      <div className="flex flex-1 flex-col p-5">
+        <div
+          className="mb-3 flex items-baseline justify-between gap-3 mark"
+          style={{ letterSpacing: "0.18em" }}
+        >
+          <span>{idx}</span>
+          <span className="truncate">
+            {status}
+            {year ? ` \u00b7 ${year}` : ""}
+          </span>
+        </div>
+        <h3 className="display mb-2 text-2xl leading-tight text-[var(--ink)]">
+          {title}
+        </h3>
+        <p className="mb-4 text-sm leading-relaxed text-[var(--ink-dim)]">
+          {description}
+        </p>
 
-        {metrics && (
-          <div className="mb-4 grid grid-cols-3 gap-2 text-xs">
-            <div className="flex items-center gap-1 rounded-md bg-white/5 border border-white/10 px-2 py-1 text-white/80">
-              <FiTrendingUp className="opacity-70 shrink-0" /> Perf {metrics.perf ?? "—"}
-            </div>
-            <div className="flex items-center gap-1 rounded-md bg-white/5 border border-white/10 px-2 py-1 text-white/80">
-              <FiShield className="opacity-70 shrink-0" /> A11y {metrics.a11y ?? "—"}
-            </div>
-            <div className="flex items-center gap-1 rounded-md bg-white/5 border border-white/10 px-2 py-1 text-white/80">
-              <FiActivity className="opacity-70 shrink-0" /> Bundle {metrics.bundle ?? "—"}
-            </div>
-          </div>
-        )}
-
-        <div className="mb-5 flex flex-wrap gap-2">
+        <div className="mb-5 flex flex-wrap gap-1.5">
           {tech.map((t) => (
-            <span key={t} className="rounded-md bg-white/10 px-2 py-1 text-xs font-medium text-white/80">
+            <span
+              key={t}
+              className="text-[10px] tracking-wide px-1.5 py-0.5 border border-[var(--line)] text-[var(--ink-faint)]"
+            >
               {t}
             </span>
           ))}
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="mt-auto flex items-center gap-2">
           {onOpenCaseStudy && (
             <button
+              type="button"
               onClick={onOpenCaseStudy}
-              className="inline-flex items-center gap-2 rounded-md border border-white/20 hover:border-white/40 px-3 py-2 text-sm font-semibold text-white transition-colors"
+              className="btn-line px-3 py-1.5 text-[11px]"
             >
-              Case Study
+              Case study
             </button>
           )}
-          {demoLink ? (
+          {demoLink && demoLink !== "#" && (
             <a
               href={demoLink}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 rounded-md btn-accent px-3 py-2 text-sm font-semibold"
+              className="btn-line inline-flex items-center gap-1.5 px-3 py-1.5 text-[11px]"
             >
-              <FiExternalLink /> Live
+              <FiExternalLink size={12} /> Demo
             </a>
-          ) : (
-            <span className="inline-flex items-center gap-2 rounded-md border border-white/10 text-white/30 cursor-not-allowed px-3 py-2 text-sm font-semibold" aria-disabled="true">
-              <FiExternalLink /> Live
-            </span>
           )}
-          {repoLink ? (
+          {repoLink && repoLink !== "#" && (
             <a
               href={repoLink}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 rounded-md border border-white/20 hover:border-white/40 px-3 py-2 text-sm font-semibold text-white transition-colors"
+              className="btn-line inline-flex items-center gap-1.5 px-3 py-1.5 text-[11px]"
+              aria-label={`${title} source on GitHub`}
             >
-              <FaGithub /> Code
+              <FaGithub size={12} /> Code
             </a>
-          ) : (
-            <span className="inline-flex items-center gap-2 rounded-md border border-white/10 text-white/30 cursor-not-allowed px-3 py-2 text-sm font-semibold" aria-disabled="true">
-              <FaGithub /> Code
-            </span>
           )}
         </div>
       </div>

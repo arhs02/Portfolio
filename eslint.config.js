@@ -23,7 +23,13 @@ export default [
     rules: {
       ...js.configs.recommended.rules,
       ...reactHooks.configs.recommended.rules,
-      "no-unused-vars": ["error", { varsIgnorePattern: "^[A-Z_]" }],
+      // No eslint-plugin-react here, so identifiers used only inside JSX read
+      // as unused. Capitalized names are components — ignore them in both
+      // variable and destructured-prop position.
+      "no-unused-vars": [
+        "error",
+        { varsIgnorePattern: "^[A-Z_]", argsIgnorePattern: "^[A-Z_]" },
+      ],
       "react-refresh/only-export-components": [
         "warn",
         { allowConstantExport: true },

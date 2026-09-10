@@ -17,28 +17,28 @@ export default function ResumeSection({ pdfUrl, showTitle = true }) {
     <div className="w-full max-w-5xl mx-auto text-left">
       <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
         {showTitle && (
-          <h3 className="text-2xl font-semibold text-white">Resume</h3>
+          <h3 className="text-2xl font-semibold text-[var(--ink)]">Resume</h3>
         )}
         <div className="flex items-center gap-2">
           <a
             href={pdfUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 rounded-md border border-white/20 px-3 py-2 text-sm font-semibold text-white hover:border-white/40"
+            className="inline-flex items-center gap-2 btn-line px-3 py-2 text-sm"
           >
             <FiExternalLink /> View
           </a>
           <a
             href={pdfUrl}
             download
-            className="inline-flex items-center gap-2 rounded-md bg-yellow-400/90 px-3 py-2 text-sm font-semibold text-black hover:bg-yellow-400"
+            className="btn-solid inline-flex items-center gap-2 px-3 py-2 text-sm"
           >
             <FiDownload /> Download
           </a>
           <button
             type="button"
             onClick={() => window.print()}
-            className="inline-flex items-center gap-2 rounded-md border border-white/20 px-3 py-2 text-sm font-semibold text-white hover:border-white/40"
+            className="inline-flex items-center gap-2 btn-line px-3 py-2 text-sm"
           >
             <FiPrinter /> Print
           </button>
@@ -46,7 +46,7 @@ export default function ResumeSection({ pdfUrl, showTitle = true }) {
       </div>
 
       {/* PDF embed with graceful fallback: use canvas-based renderer on iOS or when embedding fails */}
-      <div className="rounded-xl overflow-hidden border border-white/10 bg-black/20 backdrop-blur">
+      <div className="overflow-hidden border border-[var(--line)] bg-[rgba(38,48,60,0.05)] ">
         {useCanvasFallback ? (
           <PdfCanvasFallback src={pdfUrl} height={0.7} />
         ) : (
@@ -64,7 +64,7 @@ export default function ResumeSection({ pdfUrl, showTitle = true }) {
               className="w-full h-[70vh]"
               onError={() => setUseCanvasFallback(true)}
             />
-            <div className="p-6 text-white/90">
+            <div className="p-6 text-[var(--ink-dim)]">
               Your browser can’t display embedded PDFs. Use the buttons above to
               view or download the resume.
             </div>

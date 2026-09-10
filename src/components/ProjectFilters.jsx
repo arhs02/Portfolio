@@ -22,8 +22,8 @@ export default function ProjectFilters({
             onClick={() => setActiveTech(t === "All" ? null : t)}
             className={`rounded-full px-3 py-1.5 text-sm border transition-colors ${
               (activeTech ?? "All") === t
-                ? "bg-yellow-400 text-black border-yellow-400"
-                : "text-white border-white/20 hover:border-white/40"
+                ? "bg-[var(--accent)] text-[var(--paper)] border-[var(--accent)]"
+                : "text-[var(--ink)] border-[var(--line)] hover:border-[var(--accent)]"
             }`}
           >
             {t}
@@ -31,11 +31,11 @@ export default function ProjectFilters({
         ))}
       </div>
       <div>
-        <label className="mr-2 text-white/80 text-sm">Sort</label>
+        <label className="mr-2 text-[var(--ink-dim)] text-sm">Sort</label>
         <select
           value={sortBy}
           onChange={(e) => setSortBy(e.target.value)}
-          className="rounded-md bg-black/40 text-white border border-white/20 px-2 py-1 text-sm"
+          className="rounded-md bg-[var(--paper)] text-[var(--ink)] border border-[var(--line)] px-2 py-1 text-sm"
         >
           <option value="newest">Newest</option>
           <option value="impact">Impact</option>
