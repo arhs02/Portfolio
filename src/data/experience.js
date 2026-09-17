@@ -19,8 +19,8 @@ const experience = [
     location: "Buffalo, NY",
     stack: ["Python", "PyTorch", "Neo4j", "FAISS", "Llama-3.3", "Kafka"],
     headline: [
-      { value: "4.7M+", label: "log lines processed" },
-      { value: "−78%", label: "inference latency" },
+      { value: "97%", label: "F1, primary log system" },
+      { value: "90%", label: "F1, second log system" },
     ],
     blurb:
       "Built the anomaly-detection pipeline over a supercomputer's log telemetry — cheap models triage everything, and only what looks wrong escalates to a heavyweight reasoning tier.",
@@ -37,8 +37,8 @@ const experience = [
           {
             title: "At a glance",
             bullets: [
-              "Built a two-tier anomaly detector using small language models across **4.7M+ log lines**, cutting inference latency **78%**.",
-              "Parsed four distinct log formats with strict chronological splits, then validated the model live on a **Kafka stream**.",
+              "Designed a **two-tier architecture** for a log anomaly detector: a fast small language model screens most traffic, and uncertain cases escalate to a second-stage model for deeper review.",
+              "Fine-tuned a small language model to flag anomalies in **two production log systems**, hitting F1 scores above **97%** and **90%**.",
             ],
           },
           {
@@ -76,7 +76,7 @@ const experience = [
     location: "Buffalo, NY",
     stack: ["React Native", "TypeScript", "Spring Boot", "PostgreSQL", "RAG"],
     headline: [
-      { value: "85%", label: "diagnosis match rate" },
+      { value: "85%", label: "consults with the final dx in top 3" },
       { value: "15→4", label: "min pre-consult review" },
       { value: "−30%", label: "redundant API calls" },
     ],
@@ -95,7 +95,7 @@ const experience = [
               "Owned full-stack development of a patient-facing urology telehealth platform — authentication, appointment booking, doctor-patient chat and medication tracking — shipped to production in **4 months**.",
               "Partnered with the founding urologist on an **adaptive intake questionnaire** that compiles patient answers into a pre-consult report, cutting review time from ~15 minutes to under 4.",
               "Rebuilt the API client layer with request deduplication, response caching and **refresh-token rotation**, cutting redundant backend calls 30% and closing a token-replay security gap.",
-              "Built an **AI diagnosis-assist tool** that uses an LLM to pull symptoms from intake reports and a RAG layer over clinical guidelines to rank likely diagnoses, matching the urologist's diagnosis on **85% of consults**.",
+              "Built an **AI diagnosis-assist tool** that uses an LLM to pull symptoms from intake reports and a RAG layer trained on clinical guidelines to rank the **top 3 likely diagnoses**, which included the urologist's final diagnosis on **85% of consults**.",
             ],
           },
           {
@@ -163,12 +163,12 @@ const experience = [
       "AWS",
     ],
     headline: [
-      { value: "−45%", label: "order-status tickets" },
-      { value: "+18%", label: "recall@10 over baseline" },
+      { value: "4,000+", label: "orders a day" },
       { value: "−97%", label: "p99 latency in an outage" },
+      { value: "2d→20m", label: "payout reconciliation" },
     ],
     blurb:
-      "Responsible for the order lifecycle end to end — placement, dispatch, delivery and vendor payouts — plus the prediction layer sitting on top of it: ETAs and recommendations.",
+      "Owned the order lifecycle end to end — placement, dispatch, delivery and vendor payouts — on Node.js and PostgreSQL, through a 20x holiday traffic spike.",
     stints: [
       {
         role: "Software Engineer",

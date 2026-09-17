@@ -376,9 +376,8 @@ function Home({ onScrollDown }) {
         </h1>
 
         <p className="on-sky-dim mx-auto mt-7 max-w-md text-[13px] sm:text-sm leading-relaxed">
-          I build systems that carry real traffic — order pipelines, delivery
-          tracking, recommenders, and retrieval stacks that stay up when they
-          matter.
+          I build systems that carry real traffic — order pipelines, telehealth
+          platforms, and log anomaly detection that stays up when it matters.
         </p>
       </div>
 
@@ -407,11 +406,13 @@ function About() {
   return (
     <div className="space-y-12">
       <p className="display text-xl sm:text-2xl leading-snug text-[var(--ink)]">
-        Software Engineer at Goodz, building production AI and backend systems —
-        live delivery tracking on GPS ingestion and WebSockets, a two-tower
-        PyTorch recommender, and order services handling thousands of orders a
-        day on Node.js and PostgreSQL. Previously shipped a urology telehealth
-        platform at Youro, including an LLM + RAG diagnosis-assist tool.
+        Software engineer with an MS in Computer Science and Engineering from
+        UB SUNY. Most recently a research aide at the SUNY Research Foundation,
+        designing a two-tier log anomaly detector on small language models —
+        work I am continuing independently as L-GRIP. Before that, shipped a
+        urology telehealth platform at Youro, including an LLM + RAG
+        diagnosis-assist tool, and owned the core order service at Goodz,
+        handling 4,000+ orders a day on Node.js and PostgreSQL.
       </p>
 
       <div>
@@ -465,7 +466,7 @@ function About() {
         <a href={resumePdf} className="btn-solid px-5 py-2.5">
           Resume
         </a>
-        <a href="mailto:arhsiddq@gmail.com" className="btn-line px-5 py-2.5">
+        <a href="mailto:arahmanhs02@gmail.com" className="btn-line px-5 py-2.5">
           Email
         </a>
         <a
@@ -484,10 +485,10 @@ function About() {
 function Contact() {
   const links = [
     {
-      href: "mailto:arhsiddq@gmail.com",
+      href: "mailto:arahmanhs02@gmail.com",
       Icon: FaEnvelope,
       label: "Email",
-      sub: "arhsiddq@gmail.com",
+      sub: "arahmanhs02@gmail.com",
     },
     {
       href: "https://linkedin.com/in/rahman-hussain",

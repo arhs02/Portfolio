@@ -165,6 +165,6 @@ No license file is present. All rights reserved by the author unless a license i
 
 ## Contact
 
-- Email: arhsiddq@gmail.com
+- Email: arahmanhs02@gmail.com
 - LinkedIn: https://linkedin.com/in/rahman-hussain
 - GitHub: https://github.com/arhs02

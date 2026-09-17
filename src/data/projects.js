@@ -1,10 +1,44 @@
 const projects = [
   {
+    title: "L-GRIP",
+    year: 2026,
+    status: "Ongoing",
+    description:
+      "Independent research (Sept 2026) continuing the SUNY anomaly-detection work: the filter redesigned as a multi-model pipeline and benchmarked against a single 70B model on the same hardware, cutting inference time 78% and memory 82% per log line, fed by a dual-path Kafka pipeline into Neo4j.",
+    tech: ["Python", "PyTorch", "Llama", "Kafka", "Neo4j"],
+    repoLink: "#",
+    caseStudy: {
+      problem:
+        "A single large model can classify log anomalies well, but running a 70B model over every line is too slow and too memory-hungry for a live stream. The question was whether a pipeline of smaller models could match it on the same hardware, and how to feed that pipeline from Kafka without detection racing ahead of the graph it depends on.",
+      constraints: [
+        "Benchmarked against a single 70B model on identical hardware",
+        "Live Kafka ingest — detection must never read a graph write that has not landed yet",
+        "Per-log-line latency and memory both had to fall, not just one",
+        "Graph context in Neo4j has to stay consistent with the detection path",
+      ],
+      approach:
+        "Redesigned the anomaly filter as a multi-model pipeline: cheap models handle the bulk of traffic and only uncertain cases reach the expensive tier. On the ingest side, a Kafka pipeline splits each incoming log into two parallel paths — one writes to the Neo4j graph, the other runs anomaly detection — with a sync check so the detection path never reads the graph before the matching write has landed.",
+      results: [
+        "−78% inference time per log line versus the single 70B model",
+        "−82% memory use per log line on the same hardware",
+        "Dual-path Kafka pipeline with a write-before-read sync guarantee",
+      ],
+      highlights: [
+        "Multi-model pipeline benchmarked head-to-head against a 70B baseline",
+        "Kafka fan-out into graph write and detection paths",
+        "Sync check preventing detection from reading stale graph state",
+        "Continuation of the SUNY Research Foundation two-tier design",
+      ],
+      links: [],
+      images: [],
+    },
+  },
+  {
     title: "Image Indexing & Semantic Search",
     year: 2026,
     status: "Completed",
     description:
-      "UB Research project (Feb–Mar 2026): indexed a client's photo archive with InsightFace for face tags and RAM for object tags while keeping CPU load low, then built a hybrid search pipeline that pre-filters candidates in SQLite before running CLIP and FAISS vector search.",
+      "UB Research project (Mar 2026): indexed a client's photo archive with InsightFace for face tags and RAM for object tags while keeping CPU load low, then built a hybrid search pipeline that pre-filters candidates in SQLite before running CLIP and FAISS vector search.",
     tech: ["Python", "FastAPI", "FAISS", "CLIP", "InsightFace", "RAM", "SQLite"],
     repoLink: "#",
     caseStudy: {
