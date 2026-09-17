@@ -2,10 +2,8 @@
   Experience content, separated from layout.
 
   Each role carries a `headline` (what the card shows — two or three numbers)
-  and `stints` (what the overlay shows). A role can have more than one stint:
-  Goodz is one employer across two non-contiguous periods, so it reads as a
-  single card with both ranges and a combined tenure rather than two cards
-  competing for the same company name.
+  and `stints` (what the overlay shows). A role may have more than one stint;
+  the card lists every range and the tenure is summed across them.
 
   `start` / `end` are YYYY-MM; a null `end` means present and lets the tenure
   keep counting on its own. Bullet strings support **bold** and `code`; see
@@ -13,88 +11,6 @@
   nothing has to be dangerously injected.
 */
 const experience = [
-  {
-    id: "goodz",
-    company: "Goodz Pvt. Ltd",
-    role: "Software Engineer",
-    location: "San Francisco, CA · Remote",
-    stack: [
-      "Python",
-      "PyTorch",
-      "Node.js",
-      "PostgreSQL",
-      "Redis",
-      "WebSockets",
-      "Angular",
-      "AWS",
-    ],
-    headline: [
-      { value: "−45%", label: "order-status tickets" },
-      { value: "+18%", label: "recall@10 over baseline" },
-      { value: "−97%", label: "p99 latency in an outage" },
-    ],
-    blurb:
-      "Responsible for the order lifecycle end to end — placement, dispatch, delivery and vendor payouts — plus the prediction layer sitting on top of it: ETAs and recommendations.",
-    stints: [
-      {
-        role: "Software Engineer",
-        period: "Jan 2026 – Present",
-        start: "2026-01",
-        end: null,
-        current: true,
-        sections: [
-          {
-            title: "Live delivery tracking",
-            bullets: [
-              "Designed and owned an end-to-end live delivery tracking product with GPS ingestion, real-time WebSocket updates, and an ETA model trained on historical delivery times, cutting order-status support tickets **45%**.",
-            ],
-          },
-          {
-            title: "Order recommendations",
-            bullets: [
-              "Built the customer order recommendation system, training a **two-tower PyTorch model** on order history that beat the baseline by **18% on recall@10**.",
-              "Served recommendations from Redis to lift repeat-order conversion **20%**.",
-            ],
-          },
-        ],
-      },
-      {
-        role: "Software Engineer",
-        period: "Jul 2024 – Aug 2025",
-        start: "2024-07",
-        end: "2025-08",
-        sections: [
-          {
-            title: "Core order service",
-            bullets: [
-              "Engineered the core order service handling placement, confirmation, dispatch and delivery for **4,000+ orders a day** on Node.js and PostgreSQL, hardened with idempotent transitions to cut stuck-order rates **40%**.",
-              "Owned vendor payouts and reconciliation, replacing a manual spreadsheet workflow with an automated nightly job that cut reconciliation from **2 days to 20 minutes**.",
-              "Traced a production outage during a **20x holiday traffic spike** to a saturated database connection pool and fixed it with a Redis caching layer, cutting p99 latency **97%** with zero downtime.",
-              "Designed and built a custom high-performance data grid for **50,000+ order records**, cutting rendering lag **73%**.",
-            ],
-          },
-          {
-            title: "Web platform migration",
-            bullets: [
-              "Led the migration of a legacy HTML/PHP site to Angular, cutting page load from 8 seconds to under 2.",
-              "**What actually made it fast:** lazy-loaded images, route-level lazy loading so checkout and vendor dashboard modules only load on navigation, and offloading static assets to S3 + CloudFront.",
-              "Built the data grid on Angular CDK `VirtualScrollViewport` and RxJS, with multi-level grouping, RxJS-driven filtering, drag-and-drop reordering, and WCAG ARIA roles plus keyboard navigation.",
-              "Refactored and stabilized Paytm payment flows, fixing checksum mismatches, webhook issues and timestamp sync errors.",
-            ],
-          },
-          {
-            title: "Infrastructure & mobile",
-            bullets: [
-              "Cut server delivery costs **20%** by moving static asset hosting to S3 and CloudFront, replacing manual FTP deploys with a one-command pipeline anyone on the team could run.",
-              "Rebuilt the React Native navigation stack, fixing Android back-button exits and iOS swipe gesture glitches.",
-              "Integrated Firebase Cloud Messaging for driver alerts, and fixed a ProGuard bug where obfuscated class names broke the FCM SDK at runtime.",
-              "Reduced the production APK from 45MB to ~34MB, and added delivery tracking maps on OpenStreetMap and Leaflet inside a WebView at roughly zero cost.",
-            ],
-          },
-        ],
-      },
-    ],
-  },
   {
     id: "suny",
     company: "SUNY Research Foundation",
@@ -225,6 +141,79 @@ const experience = [
               "Solved the Node-environment limitation for native UI measurement by injecting mock coordinates through a `testMeasure` prop.",
               "Enforced `testID` props across the codebase to replace fragile text- and index-based assertions.",
               "Migrated the Android build from legacy to the New Architecture (TurboModules/Fabric), resolving library incompatibilities.",
+            ],
+          },
+        ],
+      },
+    ],
+  },
+  {
+    id: "goodz",
+    company: "Goodz Pvt. Ltd",
+    role: "Software Engineer",
+    location: "San Francisco, CA · Remote",
+    stack: [
+      "Python",
+      "PyTorch",
+      "Node.js",
+      "PostgreSQL",
+      "Redis",
+      "WebSockets",
+      "Angular",
+      "AWS",
+    ],
+    headline: [
+      { value: "−45%", label: "order-status tickets" },
+      { value: "+18%", label: "recall@10 over baseline" },
+      { value: "−97%", label: "p99 latency in an outage" },
+    ],
+    blurb:
+      "Responsible for the order lifecycle end to end — placement, dispatch, delivery and vendor payouts — plus the prediction layer sitting on top of it: ETAs and recommendations.",
+    stints: [
+      {
+        role: "Software Engineer",
+        period: "Jul 2023 – Dec 2024",
+        start: "2023-07",
+        end: "2024-12",
+        sections: [
+          {
+            title: "Live delivery tracking",
+            bullets: [
+              "Designed and owned an end-to-end live delivery tracking product with GPS ingestion, real-time WebSocket updates, and an ETA model trained on historical delivery times, cutting order-status support tickets **45%**.",
+            ],
+          },
+          {
+            title: "Order recommendations",
+            bullets: [
+              "Built the customer order recommendation system, training a **two-tower PyTorch model** on order history that beat the baseline by **18% on recall@10**.",
+              "Served recommendations from Redis to lift repeat-order conversion **20%**.",
+            ],
+          },
+          {
+            title: "Core order service",
+            bullets: [
+              "Engineered the core order service handling placement, confirmation, dispatch and delivery for **4,000+ orders a day** on Node.js and PostgreSQL, hardened with idempotent transitions to cut stuck-order rates **40%**.",
+              "Owned vendor payouts and reconciliation, replacing a manual spreadsheet workflow with an automated nightly job that cut reconciliation from **2 days to 20 minutes**.",
+              "Traced a production outage during a **20x holiday traffic spike** to a saturated database connection pool and fixed it with a Redis caching layer, cutting p99 latency **97%** with zero downtime.",
+              "Designed and built a custom high-performance data grid for **50,000+ order records**, cutting rendering lag **73%**.",
+            ],
+          },
+          {
+            title: "Web platform migration",
+            bullets: [
+              "Led the migration of a legacy HTML/PHP site to Angular, cutting page load from 8 seconds to under 2.",
+              "**What actually made it fast:** lazy-loaded images, route-level lazy loading so checkout and vendor dashboard modules only load on navigation, and offloading static assets to S3 + CloudFront.",
+              "Built the data grid on Angular CDK `VirtualScrollViewport` and RxJS, with multi-level grouping, RxJS-driven filtering, drag-and-drop reordering, and WCAG ARIA roles plus keyboard navigation.",
+              "Refactored and stabilized Paytm payment flows, fixing checksum mismatches, webhook issues and timestamp sync errors.",
+            ],
+          },
+          {
+            title: "Infrastructure & mobile",
+            bullets: [
+              "Cut server delivery costs **20%** by moving static asset hosting to S3 and CloudFront, replacing manual FTP deploys with a one-command pipeline anyone on the team could run.",
+              "Rebuilt the React Native navigation stack, fixing Android back-button exits and iOS swipe gesture glitches.",
+              "Integrated Firebase Cloud Messaging for driver alerts, and fixed a ProGuard bug where obfuscated class names broke the FCM SDK at runtime.",
+              "Reduced the production APK from 45MB to ~34MB, and added delivery tracking maps on OpenStreetMap and Leaflet inside a WebView at roughly zero cost.",
             ],
           },
         ],
