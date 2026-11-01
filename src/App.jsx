@@ -411,8 +411,8 @@ function About() {
         designing a two-tier log anomaly detector on small language models —
         work I am continuing independently as L-GRIP. Before that, shipped a
         urology telehealth platform at Youro, including an LLM + RAG
-        diagnosis-assist tool, and owned the core order service at Goodz,
-        handling 4,000+ orders a day on Node.js and PostgreSQL.
+        diagnosis-assist tool, and owned the order and payments system at
+        Goodz, a 340-vendor marketplace, on Node.js and PostgreSQL.
       </p>
 
       <div>
