@@ -417,50 +417,42 @@ function Home({ onScrollDown }) {
               viewBox="0 0 520 176"
               aria-hidden="true"
             >
+              {/* Sprite-style, not shaded: flat colour with hard edges. The
+                  cream shape is the whole silhouette; the periwinkle body is
+                  the same cluster pushed down and clipped inside it, so the
+                  cream survives as a lit rim along the top and a thin line
+                  around the bottom. */}
               <defs>
-                {/* userSpaceOnUse, not the default objectBoundingBox: the
-                    default applies the ramp to each shape separately, so
-                    every circle gets its own light-to-dark and the cloud
-                    reads as a pile of balls instead of one lit volume. */}
-                <linearGradient
-                  id="nimbusBody"
-                  gradientUnits="userSpaceOnUse"
-                  x1="0"
-                  y1="0"
-                  x2="0"
-                  y2="140"
-                >
-                  <stop offset="0%" stopColor="#fffdf7" />
-                  <stop offset="42%" stopColor="#fbf4f0" />
-                  <stop offset="78%" stopColor="#eadfe6" />
-                  <stop offset="100%" stopColor="#dcd2e2" />
-                </linearGradient>
-                <radialGradient
-                  id="nimbusBounce"
-                  gradientUnits="userSpaceOnUse"
-                  cx="260"
-                  cy="142"
-                  r="250"
-                >
-                  <stop offset="0%" stopColor="#f7c89a" stopOpacity="0.55" />
-                  <stop offset="100%" stopColor="#f7c89a" stopOpacity="0" />
-                </radialGradient>
+                <clipPath id="nimbusInner">
+                  <rect x="58" y="84" width="404" height="46" rx="23" />
+                  <circle cx="150" cy="84" r="48" />
+                  <circle cx="266" cy="62" r="62" />
+                  <circle cx="372" cy="76" r="52" />
+                  <circle cx="84" cy="104" r="28" />
+                  <circle cx="442" cy="106" r="24" />
+                </clipPath>
               </defs>
 
-              <g fill="url(#nimbusBody)">
+              <g fill="#fdf8e6">
                 <rect x="52" y="78" width="416" height="58" rx="29" />
                 <circle cx="150" cy="84" r="54" />
                 <circle cx="266" cy="62" r="68" />
                 <circle cx="372" cy="76" r="58" />
                 <circle cx="84" cy="104" r="34" />
                 <circle cx="442" cy="106" r="30" />
+                {/* Tapered tails — the flourish that makes it read as drawn
+                    rather than as a stack of circles. */}
+                <path d="M 58 110 C 40 117 18 127 4 136 C 26 136 46 132 62 127 Z" />
+                <path d="M 462 112 C 480 119 502 129 516 138 C 494 138 474 134 458 129 Z" />
               </g>
 
-              {/* Warm light thrown back up off the flat. */}
-              <g fill="url(#nimbusBounce)">
-                <rect x="52" y="78" width="416" height="58" rx="29" />
-                <circle cx="84" cy="104" r="34" />
-                <circle cx="442" cy="106" r="30" />
+              <g fill="#c0cde9" clipPath="url(#nimbusInner)">
+                <rect x="58" y="104" width="404" height="32" rx="16" />
+                <circle cx="150" cy="104" r="50" />
+                <circle cx="266" cy="84" r="62" />
+                <circle cx="372" cy="96" r="54" />
+                <circle cx="84" cy="120" r="30" />
+                <circle cx="442" cy="122" r="26" />
               </g>
 
               {/* The joke: the tagline ends "stays up when it matters", and

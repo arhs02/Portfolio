@@ -155,7 +155,6 @@ body {
      push the cloud up into the name. 70 is the cloud's mass centre in
      viewBox units, 176 the viewBox height. */
   transform: translate(-50%, -40%);
-  filter: drop-shadow(0 14px 30px rgba(60, 58, 96, 0.22));
   z-index: 0;
   pointer-events: none;
 }
@@ -220,9 +219,16 @@ body {
    it past the viewport and gave the whole page ~22px of horizontal scroll.
    Capped here rather than with overflow on html/body: that would make the
    body a scroll container and break the sticky pin in Experience. */
+/* On a phone the cloud has to be wider than its own text box, and the text
+   has to clear the tapered tails, which now reach the edges of the viewBox.
+   Capped so the whole thing still fits the viewport — a wider cloud here
+   used to give the page horizontal scroll. */
 @media (max-width: 560px) {
   .nimbus-svg {
-    width: 96%;
+    width: 112%;
+  }
+  .nimbus-text {
+    max-width: 17.5rem;
   }
 }
 
