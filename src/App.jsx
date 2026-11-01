@@ -405,26 +405,65 @@ function Home({ onScrollDown }) {
           <span className="display-em">Hussain Siddique</span>
         </h1>
 
-        {/* The tagline rides a cartoon cloud rather than sitting on bare
-            sky. Overlapping ellipses rather than a hand-written path: the
-            silhouette is the only thing that matters and this is far easier
-            to adjust. */}
+        {/* The tagline rides a cartoon cloud. Lit like the rest of the
+            scene: warm and sunlit across the top, cool lavender underneath
+            where it is in its own shadow, with a little bounce off the salt
+            flat along the bottom edge. A flat single-colour fill read as a
+            sticker; the gradient is what makes it a volume. */}
         <div className="nimbus">
           <div className="nimbus-float">
             <svg
               className="nimbus-svg"
-              viewBox="0 0 520 170"
+              viewBox="0 0 520 152"
               aria-hidden="true"
             >
-              <g>
-                <ellipse cx="250" cy="80" rx="110" ry="62" />
-                <ellipse cx="130" cy="104" rx="86" ry="48" />
-                <ellipse cx="372" cy="100" rx="92" ry="50" />
-                <ellipse cx="182" cy="62" rx="62" ry="40" />
-                <ellipse cx="318" cy="56" rx="58" ry="38" />
-                <rect x="70" y="96" width="380" height="48" rx="24" />
+              <defs>
+                {/* userSpaceOnUse, not the default objectBoundingBox: the
+                    default applies the ramp to each shape separately, so
+                    every circle gets its own light-to-dark and the cloud
+                    reads as a pile of balls instead of one lit volume. */}
+                <linearGradient
+                  id="nimbusBody"
+                  gradientUnits="userSpaceOnUse"
+                  x1="0"
+                  y1="0"
+                  x2="0"
+                  y2="140"
+                >
+                  <stop offset="0%" stopColor="#fffdf7" />
+                  <stop offset="42%" stopColor="#fbf4f0" />
+                  <stop offset="78%" stopColor="#eadfe6" />
+                  <stop offset="100%" stopColor="#dcd2e2" />
+                </linearGradient>
+                <radialGradient
+                  id="nimbusBounce"
+                  gradientUnits="userSpaceOnUse"
+                  cx="260"
+                  cy="142"
+                  r="250"
+                >
+                  <stop offset="0%" stopColor="#f7c89a" stopOpacity="0.55" />
+                  <stop offset="100%" stopColor="#f7c89a" stopOpacity="0" />
+                </radialGradient>
+              </defs>
+
+              <g fill="url(#nimbusBody)">
+                <rect x="52" y="78" width="416" height="58" rx="29" />
+                <circle cx="150" cy="84" r="54" />
+                <circle cx="266" cy="62" r="68" />
+                <circle cx="372" cy="76" r="58" />
+                <circle cx="84" cy="104" r="34" />
+                <circle cx="442" cy="106" r="30" />
+              </g>
+
+              {/* Warm light thrown back up off the flat. */}
+              <g fill="url(#nimbusBounce)">
+                <rect x="52" y="78" width="416" height="58" rx="29" />
+                <circle cx="84" cy="104" r="34" />
+                <circle cx="442" cy="106" r="30" />
               </g>
             </svg>
+
             <p className="nimbus-text">
               I build systems that carry real traffic — order pipelines,
               telehealth platforms, and log anomaly detection that stays up

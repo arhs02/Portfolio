@@ -131,7 +131,7 @@ body {
 
 .nimbus {
   position: relative;
-  margin: 2.1rem auto 0;
+  margin: 3.4rem auto 0;
   width: min(30rem, 100%);
   opacity: var(--hero-fade, 1);
   /* Drifts off to the right as the hero scrolls away, carrying its text. */
@@ -146,13 +146,12 @@ body {
   position: absolute;
   left: 50%;
   top: 50%;
-  width: 128%;
+  width: 118%;
   height: auto;
   /* The cloud's mass sits a little below the middle of its own viewBox, so
      it is nudged up to centre on the text rather than on the box. */
-  transform: translate(-50%, -53%);
-  fill: rgba(253, 251, 247, 0.95);
-  filter: drop-shadow(0 12px 26px rgba(52, 56, 86, 0.26));
+  transform: translate(-50%, -52%);
+  filter: drop-shadow(0 14px 30px rgba(60, 58, 96, 0.22));
   z-index: 0;
   pointer-events: none;
 }
@@ -190,7 +189,7 @@ body {
    body a scroll container and break the sticky pin in Experience. */
 @media (max-width: 560px) {
   .nimbus-svg {
-    width: 110%;
+    width: 104%;
   }
 }
 
