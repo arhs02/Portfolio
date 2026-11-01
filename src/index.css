@@ -1,5 +1,11 @@
 @import "tailwindcss";
 
+@property --hero-fade {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 1;
+}
+
 /* ============================================================
    SALAR DE UYUNI — tokens
    Pale, warm, unhurried. Content floats on paper veils above a
@@ -119,55 +125,100 @@ body {
 }
 
 /* ============================================================
-   Hero nimbus
+   Hero sky
 
-   A small cartoon cloud that carries the tagline. Replaces an earlier
-   full-width haze that washed over the waterline — the horizon is the whole
-   point of the scene, so nothing is allowed to sit on top of it.
-
-   Because the cloud is light, the tagline flips to dark ink: dark-on-light
-   beats any amount of text-shadow on white-over-pale-pink.
+   Sprite clouds scattered round the edges of the landing, flying outward
+   as it scrolls away. Nothing sits across the waterline — that is the one
+   thing in the scene worth protecting — and nothing crosses the middle
+   column where the copy lives.
    ============================================================ */
 
-.nimbus {
-  position: relative;
-  margin: 3.4rem auto 0;
-  width: min(30rem, 100%);
-  opacity: var(--hero-fade, 1);
-  /* Drifts off to the right as the hero scrolls away, carrying its text. */
-  transform: translate3d(calc((1 - var(--hero-fade, 1)) * 90px), 0, 0);
-}
-
-.nimbus-float {
-  animation: nimbus-bob 7.5s ease-in-out infinite;
-}
-
-.nimbus-svg {
+.hero-clouds {
   position: absolute;
-  left: 50%;
-  top: 50%;
-  width: 108%;
-  height: auto;
-  /* The cloud's mass sits a little below the middle of its own viewBox, so
-     it is nudged up to centre on the text rather than on the box. */
-  /* Centres the CLOUD on the text rather than the whole box: the viewBox
-     now extends below the cloud to hold the bolt, so centring the box would
-     push the cloud up into the name. 70 is the cloud's mass centre in
-     viewBox units, 176 the viewBox height. */
-  transform: translate(-50%, -40%);
-  z-index: 0;
+  inset: 0;
+  overflow: hidden;
   pointer-events: none;
+  z-index: 0;
 }
 
-.nimbus-text {
+.sky-cloud {
+  position: absolute;
+  top: var(--t);
+  left: var(--l, auto);
+  right: var(--r, auto);
+  width: var(--w);
+  opacity: calc(var(--o, 0.9) * var(--hero-fade, 1));
+  transform: translate3d(
+    calc((1 - var(--hero-fade, 1)) * var(--dx, 0px)),
+    calc((1 - var(--hero-fade, 1)) * var(--dy, 0px)),
+    0
+  );
+  transition: transform 0.1s linear;
+}
+
+/* Idle drift, kept on a child so it cannot fight the scroll transform. */
+.sky-cloud-drift {
+  animation: sky-drift 22s ease-in-out infinite alternate;
+}
+
+.sprite-cloud {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+@keyframes sky-drift {
+  from {
+    transform: translate3d(-2%, 0, 0);
+  }
+  to {
+    transform: translate3d(2%, -4%, 0);
+  }
+}
+
+/* The inner pair crowd the copy once the text goes full-width. */
+@media (max-width: 860px) {
+  .sky-cloud--inner {
+    display: none;
+  }
+}
+
+/* On a phone the tagline runs the full width and the mid-height pair clip
+   its first line. They cannot move down — the waterline is immediately below
+   — and pushed far enough sideways to clear the text they are reduced to
+   stray tails, so they come out entirely. The two corner clouds carry it. */
+@media (max-width: 640px) {
+  .sky-cloud--mid-l,
+  .sky-cloud--mid-r {
+    display: none;
+  }
+}
+
+/* ============================================================
+   Hero tagline
+
+   Plain dark text, no cloud behind it. Dark-on-pale beats white-on-pale
+   here; the faint light halo lifts it off the busier parts of the sky
+   without turning into a glow.
+   ============================================================ */
+
+.hero-tagline {
   position: relative;
   z-index: 1;
-  margin: 0 auto;
-  max-width: 22.5rem;
-  padding: 0.5rem 0;
+  margin: 2.2rem auto 0;
+  max-width: 27rem;
   color: var(--ink);
   font-size: 13px;
-  line-height: 1.65;
+  line-height: 1.7;
+  text-shadow:
+    0 1px 2px rgba(255, 253, 248, 0.55),
+    0 0 14px rgba(255, 253, 248, 0.7);
+}
+
+@media (min-width: 640px) {
+  .hero-tagline {
+    font-size: 14.5px;
+  }
 }
 
 .nimbus-bolt {
@@ -199,58 +250,10 @@ body {
   }
 }
 
-@keyframes nimbus-bob {
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-7px);
-  }
-}
-
-@media (min-width: 640px) {
-  .nimbus-text {
-    font-size: 14px;
-  }
-}
-
-/* The cloud is deliberately wider than its text box, which on a phone pushed
-   it past the viewport and gave the whole page ~22px of horizontal scroll.
-   Capped here rather than with overflow on html/body: that would make the
-   body a scroll container and break the sticky pin in Experience. */
-/* On a phone the cloud has to be wider than its own text box, and the text
-   has to clear the tapered tails, which now reach the edges of the viewBox.
-   Capped so the whole thing still fits the viewport — a wider cloud here
-   used to give the page horizontal scroll. */
-@media (max-width: 560px) {
-  .nimbus-svg {
-    width: 112%;
-  }
-  .nimbus-text {
-    max-width: 17.5rem;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .nimbus-float {
-    animation: none;
-  }
-  .nimbus {
-    transform: none;
-  }
-  /* Shown, but held still — the bolt is part of the picture, the flicker is
-     the part that has to go. */
-  .nimbus-bolt {
-    animation: none;
-    opacity: 0.9;
-  }
-}
-
-/* Copy rides above the cloud and fades with it. Positioning is kept separate
-   from the fade: .hero-copy sets position:relative, which has the same
-   specificity as Tailwind's .absolute and is declared later, so putting it on
-   an absolutely-positioned element silently un-positions it. */
+/* Copy rides above the clouds and fades with them. Positioning is kept
+   separate from the fade: .hero-copy sets position:relative, which has the
+   same specificity as Tailwind's .absolute and is declared later, so putting
+   it on an absolutely-positioned element silently un-positions it. */
 .hero-copy {
   position: relative;
   z-index: 1;
@@ -259,6 +262,19 @@ body {
 
 .hero-fade-el {
   opacity: var(--hero-fade, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sky-cloud-drift {
+    animation: none;
+  }
+  .sky-cloud {
+    transform: none;
+  }
+  .nimbus-bolt {
+    animation: none;
+    opacity: 0.9;
+  }
 }
 
 /* ============================================================

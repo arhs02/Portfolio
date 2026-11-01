@@ -1,4 +1,12 @@
-import { useState, useEffect, useRef, useMemo, lazy, Suspense } from "react";
+import {
+  useState,
+  useEffect,
+  useRef,
+  useMemo,
+  useId,
+  lazy,
+  Suspense,
+} from "react";
 import { FaGithub, FaLinkedin, FaEnvelope } from "react-icons/fa";
 import UyuniScene from "./components/UyuniScene.jsx";
 const ProjectCardLazy = lazy(() => import("./components/ProjectCard.jsx"));
@@ -386,9 +394,136 @@ function Panel({ num, label, wide, children }) {
    Hero
    ============================================================ */
 
+/* Flat two-tone sprite cloud. The cream shape is the whole silhouette; the
+   periwinkle body is the same cluster pushed down and clipped inside an
+   inset copy of it, so cream survives as a lit rim on the bumps and a thin
+   line round the bottom. Tapered tails stop it reading as stacked circles.
+
+   The clip path id is generated per instance — several of these render at
+   once and a shared id would be invalid markup. */
+function SpriteCloud({ bolt = false }) {
+  const uid = useId();
+  const clipId = `cloudClip${uid.replace(/:/g, "")}`;
+
+  return (
+    <svg className="sprite-cloud" viewBox="0 0 520 176" aria-hidden="true">
+      <defs>
+        <clipPath id={clipId}>
+          <rect x="58" y="84" width="404" height="46" rx="23" />
+          <circle cx="150" cy="84" r="48" />
+          <circle cx="266" cy="62" r="62" />
+          <circle cx="372" cy="76" r="52" />
+          <circle cx="84" cy="104" r="28" />
+          <circle cx="442" cy="106" r="24" />
+        </clipPath>
+      </defs>
+
+      <g fill="#fdf8e6">
+        <rect x="52" y="78" width="416" height="58" rx="29" />
+        <circle cx="150" cy="84" r="54" />
+        <circle cx="266" cy="62" r="68" />
+        <circle cx="372" cy="76" r="58" />
+        <circle cx="84" cy="104" r="34" />
+        <circle cx="442" cy="106" r="30" />
+        <path d="M 58 110 C 40 117 18 127 4 136 C 26 136 46 132 62 127 Z" />
+        <path d="M 462 112 C 480 119 502 129 516 138 C 494 138 474 134 458 129 Z" />
+      </g>
+
+      <g fill="#c0cde9" clipPath={`url(#${clipId})`}>
+        <rect x="58" y="104" width="404" height="32" rx="16" />
+        <circle cx="150" cy="104" r="50" />
+        <circle cx="266" cy="84" r="62" />
+        <circle cx="372" cy="96" r="54" />
+        <circle cx="84" cy="120" r="30" />
+        <circle cx="442" cy="122" r="26" />
+      </g>
+
+      {bolt && (
+        <path
+          className="nimbus-bolt"
+          d="M 268 128 L 245 160 L 258 160 L 251 172 L 276 148 L 261 148 L 272 128 Z"
+          fill="#f0a63c"
+        />
+      )}
+    </svg>
+  );
+}
+
+/* Scattered around the edges of the landing, never across the middle where
+   the copy sits and never below the waterline, which belongs to the scene.
+   dx/dy are where each one flies to as the hero scrolls away. */
+const SKY_CLOUDS = [
+  { t: "4%", l: "-8%", w: "30%", dx: "-190px", dy: "-30px", o: 0.95, d: "21s" },
+  {
+    t: "11%",
+    r: "-9%",
+    w: "33%",
+    dx: "200px",
+    dy: "-22px",
+    o: 0.92,
+    d: "25s",
+    bolt: true,
+  },
+  {
+    t: "25%",
+    l: "-4%",
+    w: "19%",
+    dx: "-150px",
+    dy: "16px",
+    o: 0.8,
+    d: "18s",
+    mid: "l",
+  },
+  {
+    t: "30%",
+    r: "-3%",
+    w: "17%",
+    dx: "165px",
+    dy: "20px",
+    o: 0.78,
+    d: "23s",
+    mid: "r",
+  },
+  { t: "2%", l: "26%", w: "12%", dx: "-90px", dy: "-46px", o: 0.6, d: "27s", inner: true },
+  { t: "7%", r: "25%", w: "11%", dx: "95px", dy: "-40px", o: 0.55, d: "30s", inner: true },
+];
+
+
+
 function Home({ onScrollDown }) {
   return (
     <div className="relative flex min-h-screen w-full flex-col items-center text-center animate-fade-in">
+      {/* Clipped to the hero so clouds can bleed off the edges without
+          giving the page horizontal scroll. Safe to clip here — the only
+          sticky element on the site is in Experience, not the landing. */}
+      <div className="hero-clouds" aria-hidden="true">
+        {SKY_CLOUDS.map((c, i) => (
+          <div
+            key={i}
+            className={[
+              "sky-cloud",
+              c.inner ? "sky-cloud--inner" : "",
+              c.mid ? `sky-cloud--mid-${c.mid}` : "",
+            ]
+              .filter(Boolean)
+              .join(" ")}
+            style={{
+              "--t": c.t,
+              "--l": c.l ?? "auto",
+              "--r": c.r ?? "auto",
+              "--w": c.w,
+              "--dx": c.dx,
+              "--dy": c.dy,
+              "--o": c.o,
+            }}
+          >
+            <div className="sky-cloud-drift" style={{ animationDuration: c.d }}>
+              <SpriteCloud bolt={c.bolt} />
+            </div>
+          </div>
+        ))}
+      </div>
+
       {/* The shader puts the waterline at 48% from the top. Everything here
           has to finish above it, or it lands in the glare. */}
       <div className="hero-copy w-full px-6 pt-[5vh] sm:px-28">
@@ -405,74 +540,10 @@ function Home({ onScrollDown }) {
           <span className="display-em">Hussain Siddique</span>
         </h1>
 
-        {/* The tagline rides a cartoon cloud. Lit like the rest of the
-            scene: warm and sunlit across the top, cool lavender underneath
-            where it is in its own shadow, with a little bounce off the salt
-            flat along the bottom edge. A flat single-colour fill read as a
-            sticker; the gradient is what makes it a volume. */}
-        <div className="nimbus">
-          <div className="nimbus-float">
-            <svg
-              className="nimbus-svg"
-              viewBox="0 0 520 176"
-              aria-hidden="true"
-            >
-              {/* Sprite-style, not shaded: flat colour with hard edges. The
-                  cream shape is the whole silhouette; the periwinkle body is
-                  the same cluster pushed down and clipped inside it, so the
-                  cream survives as a lit rim along the top and a thin line
-                  around the bottom. */}
-              <defs>
-                <clipPath id="nimbusInner">
-                  <rect x="58" y="84" width="404" height="46" rx="23" />
-                  <circle cx="150" cy="84" r="48" />
-                  <circle cx="266" cy="62" r="62" />
-                  <circle cx="372" cy="76" r="52" />
-                  <circle cx="84" cy="104" r="28" />
-                  <circle cx="442" cy="106" r="24" />
-                </clipPath>
-              </defs>
-
-              <g fill="#fdf8e6">
-                <rect x="52" y="78" width="416" height="58" rx="29" />
-                <circle cx="150" cy="84" r="54" />
-                <circle cx="266" cy="62" r="68" />
-                <circle cx="372" cy="76" r="58" />
-                <circle cx="84" cy="104" r="34" />
-                <circle cx="442" cy="106" r="30" />
-                {/* Tapered tails — the flourish that makes it read as drawn
-                    rather than as a stack of circles. */}
-                <path d="M 58 110 C 40 117 18 127 4 136 C 26 136 46 132 62 127 Z" />
-                <path d="M 462 112 C 480 119 502 129 516 138 C 494 138 474 134 458 129 Z" />
-              </g>
-
-              <g fill="#c0cde9" clipPath="url(#nimbusInner)">
-                <rect x="58" y="104" width="404" height="32" rx="16" />
-                <circle cx="150" cy="104" r="50" />
-                <circle cx="266" cy="84" r="62" />
-                <circle cx="372" cy="96" r="54" />
-                <circle cx="84" cy="120" r="30" />
-                <circle cx="442" cy="122" r="26" />
-              </g>
-
-              {/* The joke: the tagline ends "stays up when it matters", and
-                  this is the thing that takes systems down. Kept small, warm
-                  and slow — a flicker next to body text is an accessibility
-                  problem if it strobes. */}
-              <path
-                className="nimbus-bolt"
-                d="M 268 128 L 245 160 L 258 160 L 251 172 L 276 148 L 261 148 L 272 128 Z"
-                fill="#f0a63c"
-              />
-            </svg>
-
-            <p className="nimbus-text">
-              I build systems that carry real traffic — order pipelines,
-              telehealth platforms, and log anomaly detection that stays up
-              when it matters.
-            </p>
-          </div>
-        </div>
+        <p className="hero-tagline">
+          I build systems that carry real traffic — order pipelines, telehealth
+          platforms, and log anomaly detection that stays up when it matters.
+        </p>
       </div>
 
       <button
