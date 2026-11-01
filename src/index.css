@@ -30,6 +30,7 @@
   --font-body: "Inter", ui-sans-serif, system-ui, -apple-system, sans-serif;
 
   --scroll-y: 0px;
+  --hero-fade: 1;
 
   color-scheme: light;
 }
@@ -111,8 +112,109 @@ body {
 }
 
 .on-sky-dim {
-  color: rgba(253, 252, 250, 0.82);
-  text-shadow: 0 1px 20px rgba(40, 50, 66, 0.3);
+  color: rgba(253, 252, 250, 0.9);
+  text-shadow:
+    0 1px 2px rgba(34, 40, 56, 0.45),
+    0 1px 22px rgba(34, 40, 56, 0.4);
+}
+
+/* ============================================================
+   Hero nimbus
+
+   A small cartoon cloud that carries the tagline. Replaces an earlier
+   full-width haze that washed over the waterline — the horizon is the whole
+   point of the scene, so nothing is allowed to sit on top of it.
+
+   Because the cloud is light, the tagline flips to dark ink: dark-on-light
+   beats any amount of text-shadow on white-over-pale-pink.
+   ============================================================ */
+
+.nimbus {
+  position: relative;
+  margin: 2.1rem auto 0;
+  width: min(30rem, 100%);
+  opacity: var(--hero-fade, 1);
+  /* Drifts off to the right as the hero scrolls away, carrying its text. */
+  transform: translate3d(calc((1 - var(--hero-fade, 1)) * 90px), 0, 0);
+}
+
+.nimbus-float {
+  animation: nimbus-bob 7.5s ease-in-out infinite;
+}
+
+.nimbus-svg {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 128%;
+  height: auto;
+  /* The cloud's mass sits a little below the middle of its own viewBox, so
+     it is nudged up to centre on the text rather than on the box. */
+  transform: translate(-50%, -53%);
+  fill: rgba(253, 251, 247, 0.95);
+  filter: drop-shadow(0 12px 26px rgba(52, 56, 86, 0.26));
+  z-index: 0;
+  pointer-events: none;
+}
+
+.nimbus-text {
+  position: relative;
+  z-index: 1;
+  margin: 0 auto;
+  max-width: 22.5rem;
+  padding: 0.5rem 0;
+  color: var(--ink);
+  font-size: 13px;
+  line-height: 1.65;
+}
+
+@keyframes nimbus-bob {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-7px);
+  }
+}
+
+@media (min-width: 640px) {
+  .nimbus-text {
+    font-size: 14px;
+  }
+}
+
+/* The cloud is deliberately wider than its text box, which on a phone pushed
+   it past the viewport and gave the whole page ~22px of horizontal scroll.
+   Capped here rather than with overflow on html/body: that would make the
+   body a scroll container and break the sticky pin in Experience. */
+@media (max-width: 560px) {
+  .nimbus-svg {
+    width: 110%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nimbus-float {
+    animation: none;
+  }
+  .nimbus {
+    transform: none;
+  }
+}
+
+/* Copy rides above the cloud and fades with it. Positioning is kept separate
+   from the fade: .hero-copy sets position:relative, which has the same
+   specificity as Tailwind's .absolute and is declared later, so putting it on
+   an absolutely-positioned element silently un-positions it. */
+.hero-copy {
+  position: relative;
+  z-index: 1;
+  opacity: var(--hero-fade, 1);
+}
+
+.hero-fade-el {
+  opacity: var(--hero-fade, 1);
 }
 
 /* ============================================================

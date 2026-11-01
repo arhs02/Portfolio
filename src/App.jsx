@@ -165,6 +165,36 @@ function App() {
     };
   }, [sections]);
 
+  /* Drives the hero fade: the nimbus and copy drift off and dissolve as the
+     landing scrolls away. One custom-property write per event — no throttle
+     because the write is trivial, and deliberately not rAF. */
+  useEffect(() => {
+    const root = document.documentElement;
+    let last = -1;
+    const apply = () => {
+      const vh = window.innerHeight || root.clientHeight || 1;
+      const p = Math.min(Math.max(window.scrollY / (vh * 0.62), 0), 1);
+      const fade = 1 - p;
+      if (fade === last) return;
+      last = fade;
+      root.style.setProperty("--hero-fade", String(fade));
+    };
+    apply();
+    window.addEventListener("scroll", apply, { passive: true });
+    window.addEventListener("resize", apply, { passive: true });
+
+    // Scroll events get dropped or coalesced in some environments, which
+    // leaves the hero frozen half-faded. apply() early-returns when nothing
+    // changed, so a settled page does one scrollY read per tick.
+    const heartbeat = setInterval(apply, 200);
+
+    return () => {
+      window.removeEventListener("scroll", apply);
+      window.removeEventListener("resize", apply);
+      clearInterval(heartbeat);
+    };
+  }, []);
+
   const scrollToSection = (id) => {
     const element = document.getElementById(id);
     if (!element) return;
@@ -361,7 +391,7 @@ function Home({ onScrollDown }) {
     <div className="relative flex min-h-screen w-full flex-col items-center text-center animate-fade-in">
       {/* The shader puts the waterline at 48% from the top. Everything here
           has to finish above it, or it lands in the glare. */}
-      <div className="w-full px-6 pt-[13vh] sm:px-28">
+      <div className="hero-copy w-full px-6 pt-[13vh] sm:px-28">
         <p
           className="on-sky-dim mb-7 text-[10px] sm:text-[11px]"
           style={{ letterSpacing: "0.44em", textTransform: "uppercase" }}
@@ -375,15 +405,38 @@ function Home({ onScrollDown }) {
           <span className="display-em">Hussain Siddique</span>
         </h1>
 
-        <p className="on-sky-dim mx-auto mt-7 max-w-md text-[13px] sm:text-sm leading-relaxed">
-          I build systems that carry real traffic — order pipelines, telehealth
-          platforms, and log anomaly detection that stays up when it matters.
-        </p>
+        {/* The tagline rides a cartoon cloud rather than sitting on bare
+            sky. Overlapping ellipses rather than a hand-written path: the
+            silhouette is the only thing that matters and this is far easier
+            to adjust. */}
+        <div className="nimbus">
+          <div className="nimbus-float">
+            <svg
+              className="nimbus-svg"
+              viewBox="0 0 520 170"
+              aria-hidden="true"
+            >
+              <g>
+                <ellipse cx="250" cy="80" rx="110" ry="62" />
+                <ellipse cx="130" cy="104" rx="86" ry="48" />
+                <ellipse cx="372" cy="100" rx="92" ry="50" />
+                <ellipse cx="182" cy="62" rx="62" ry="40" />
+                <ellipse cx="318" cy="56" rx="58" ry="38" />
+                <rect x="70" y="96" width="380" height="48" rx="24" />
+              </g>
+            </svg>
+            <p className="nimbus-text">
+              I build systems that carry real traffic — order pipelines,
+              telehealth platforms, and log anomaly detection that stays up
+              when it matters.
+            </p>
+          </div>
+        </div>
       </div>
 
       <button
         onClick={onScrollDown}
-        className="drift absolute bottom-12 flex flex-col items-center gap-3"
+        className="drift hero-fade-el absolute bottom-12 flex flex-col items-center gap-3"
         aria-label="Scroll to about"
       >
         <span
