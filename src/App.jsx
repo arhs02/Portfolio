@@ -391,7 +391,7 @@ function Home({ onScrollDown }) {
     <div className="relative flex min-h-screen w-full flex-col items-center text-center animate-fade-in">
       {/* The shader puts the waterline at 48% from the top. Everything here
           has to finish above it, or it lands in the glare. */}
-      <div className="hero-copy w-full px-6 pt-[13vh] sm:px-28">
+      <div className="hero-copy w-full px-6 pt-[5vh] sm:px-28">
         <p
           className="on-sky-dim mb-7 text-[10px] sm:text-[11px]"
           style={{ letterSpacing: "0.44em", textTransform: "uppercase" }}
@@ -414,7 +414,7 @@ function Home({ onScrollDown }) {
           <div className="nimbus-float">
             <svg
               className="nimbus-svg"
-              viewBox="0 0 520 152"
+              viewBox="0 0 520 176"
               aria-hidden="true"
             >
               <defs>
@@ -462,6 +462,16 @@ function Home({ onScrollDown }) {
                 <circle cx="84" cy="104" r="34" />
                 <circle cx="442" cy="106" r="30" />
               </g>
+
+              {/* The joke: the tagline ends "stays up when it matters", and
+                  this is the thing that takes systems down. Kept small, warm
+                  and slow — a flicker next to body text is an accessibility
+                  problem if it strobes. */}
+              <path
+                className="nimbus-bolt"
+                d="M 268 128 L 245 160 L 258 160 L 251 172 L 276 148 L 261 148 L 272 128 Z"
+                fill="#f0a63c"
+              />
             </svg>
 
             <p className="nimbus-text">

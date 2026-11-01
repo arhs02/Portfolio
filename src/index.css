@@ -146,11 +146,15 @@ body {
   position: absolute;
   left: 50%;
   top: 50%;
-  width: 118%;
+  width: 108%;
   height: auto;
   /* The cloud's mass sits a little below the middle of its own viewBox, so
      it is nudged up to centre on the text rather than on the box. */
-  transform: translate(-50%, -52%);
+  /* Centres the CLOUD on the text rather than the whole box: the viewBox
+     now extends below the cloud to hold the bolt, so centring the box would
+     push the cloud up into the name. 70 is the cloud's mass centre in
+     viewBox units, 176 the viewBox height. */
+  transform: translate(-50%, -40%);
   filter: drop-shadow(0 14px 30px rgba(60, 58, 96, 0.22));
   z-index: 0;
   pointer-events: none;
@@ -165,6 +169,35 @@ body {
   color: var(--ink);
   font-size: 13px;
   line-height: 1.65;
+}
+
+.nimbus-bolt {
+  opacity: 0;
+  filter: drop-shadow(0 0 9px rgba(240, 166, 60, 0.85));
+  animation: bolt-flash 9s ease-out infinite;
+}
+
+/* Long dark gap, then a short double flicker. Deliberately not a strobe. */
+@keyframes bolt-flash {
+  0%,
+  85% {
+    opacity: 0;
+  }
+  86.5% {
+    opacity: 1;
+  }
+  88% {
+    opacity: 0.12;
+  }
+  89.5% {
+    opacity: 0.92;
+  }
+  93% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 0;
+  }
 }
 
 @keyframes nimbus-bob {
@@ -189,7 +222,7 @@ body {
    body a scroll container and break the sticky pin in Experience. */
 @media (max-width: 560px) {
   .nimbus-svg {
-    width: 104%;
+    width: 96%;
   }
 }
 
@@ -199,6 +232,12 @@ body {
   }
   .nimbus {
     transform: none;
+  }
+  /* Shown, but held still — the bolt is part of the picture, the flicker is
+     the part that has to go. */
+  .nimbus-bolt {
+    animation: none;
+    opacity: 0.9;
   }
 }
 
