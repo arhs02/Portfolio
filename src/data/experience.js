@@ -73,12 +73,13 @@ const experience = [
     id: "youro",
     company: "Youro",
     role: "Software Engineer Intern",
-    location: "Remote",
+    location: "Buffalo, NY",
     stack: [
       "React",
       "React Native",
       "TypeScript",
       "Java Spring Boot",
+      "STOMP WebSockets",
       "MySQL",
       "AWS",
       "OpenAI",
@@ -110,11 +111,21 @@ const experience = [
           {
             title: "Building the telehealth core, 0 to 1",
             bullets: [
-              "Bought back weeks of the 4-month deadline by **not** hand-rolling commodity features: a HIPAA-compliant managed identity provider for auth, and a managed chat SDK under a signed BAA for doctor-patient messaging, so engineering time went to the proprietary clinical workflows instead.",
+              "Bought back weeks of the 4-month deadline by **not** hand-rolling commodity features: a HIPAA-compliant managed identity provider carried the regulatory weight of password hashing, MFA and audit logging, so engineering time went to the proprietary clinical workflows instead.",
               "Chose React and React Native to share API clients, validation schemas and state across web and mobile — native Swift and Kotlin would have guaranteed missing the production date.",
               "Enforced a strict **UTC-only contract** with the Spring Boot backend for appointment booking, localising only at display time, which removed an entire class of off-by-one-hour and daylight-saving booking failures between patients and doctors in different states.",
               "Picked Zustand over Redux for global state — the boilerplate saving was worth real days during the crunch.",
               "**Debt taken deliberately:** skipped end-to-end UI tests. The interface was changing daily on the urologist's feedback, and brittle E2E suites would have paralysed it. Unit tests were mandatory on the timezone logic and the auth client, where correctness actually mattered.",
+            ],
+          },
+          {
+            title: "Real-time doctor-patient chat",
+            bullets: [
+              "Built the chat engine in-house on **STOMP over WebSocket** rather than buying a chat SDK — routing PHI through another vendor meant another BAA and another external boundary to defend.",
+              "Architected it **socket-first with a REST fallback**: WebSockets carry live messages, REST loads history when a thread opens, so a dropped socket degrades to a readable conversation instead of an empty screen.",
+              "**The bug that ate the most time:** messages sent fine, no errors anywhere, and nothing arrived until you force-refreshed. The backend published to user-scoped destinations like `/user/42/private` while the client subscribed to a generic `/user/private` — and STOMP accepts a subscription to a destination nobody publishes to, so there was no error to catch.",
+              "Fixed in `ChatSocket.ts` by computing the user-scoped destination **after** authentication resolves rather than at module load, when the user id was still undefined, then updating every subscription path to match.",
+              "Wrote a `legacyTimestamp` formatter to satisfy the backend's legacy date-string contract, which had been returning HTTP 400 on otherwise valid sends.",
             ],
           },
           {
