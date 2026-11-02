@@ -108,6 +108,54 @@ const projects = [
     },
   },
   {
+    title: "Offline Trend Analyst",
+    year: 2025,
+    status: "Completed",
+    description:
+      "A research agent that answers a query with a cited report, running entirely on your own machine. ArXiv and web search feed a LangGraph agent driving a local Ollama model — no API keys, no cloud, nothing leaving the laptop.",
+    tech: [
+      "Python",
+      "LangChain",
+      "LangGraph",
+      "Ollama",
+      "Llama 3.2",
+      "ArXiv API",
+      "DuckDuckGo",
+    ],
+    repoLink: "https://github.com/arhs02/offline-trend-analyst",
+    caseStudy: {
+      problem:
+        "Research assistants that actually synthesise sources are nearly all cloud services: you hand over the query, the sources and often the document, and you need an API key to start. For literature review and competitive work, the query itself is frequently the sensitive part. The goal was a tool with the same capability that never makes a call off the machine.",
+      constraints: [
+        "No cloud inference and no API keys — local models only",
+        "Has to run on an ordinary laptop, around 8 GB of RAM",
+        "Claims in the output must carry citations rather than be asserted",
+        "Academic and general web sources need combining without one drowning out the other",
+      ],
+      approach:
+        "Retrieval runs on two tracks: ArXiv for peer-reviewed work and DuckDuckGo or a self-hosted SearxNG instance for current web material, each wrapped as a LangChain tool so the agent chooses rather than the pipeline hardcoding an order.\n\nOrchestration is LangGraph, with both a simple linear agent and a more involved graph for multi-step questions that need intermediate reasoning before the next search.\n\nInference is Ollama running Llama 3.2 locally, with nomic-embed-text for embeddings, so the whole loop — query, retrieval, synthesis — stays on the machine. Output is a Markdown report with citations attached to the claims they support.",
+      results: [
+        "Full research loop runs locally: no API key, no account, no request leaving the machine",
+        "Combines peer-reviewed ArXiv results with current web sources in a single report",
+        "Generates cited Markdown reports rather than unsourced prose",
+        "Runs on commodity hardware — roughly 8 GB of RAM and 2 GB of model storage",
+      ],
+      highlights: [
+        "LangGraph agent workflows, simple and multi-step",
+        "Ollama-hosted Llama 3.2 for fully local inference",
+        "Modular LangChain tools so new sources drop in without touching the core",
+        "ArXiv plus DuckDuckGo/SearxNG dual retrieval",
+        "Citation-bearing Markdown report generation",
+      ],
+      links: [
+        { label: "LangGraph", href: "https://www.langchain.com/langgraph" },
+        { label: "Ollama", href: "https://ollama.com/" },
+        { label: "ArXiv API", href: "https://info.arxiv.org/help/api/index.html" },
+      ],
+      images: [],
+    },
+  },
+  {
     title: "Winter Path Estimator",
     year: 2026,
     status: "Completed",
