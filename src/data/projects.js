@@ -109,41 +109,77 @@ const projects = [
   },
   {
     title: "Winter Path Estimator",
-    year: 2025,
+    year: 2026,
     status: "Completed",
     description:
-      "Semantic segmentation model using U-Net to detect navigable paths in snow-covered environments, achieving 85.20% IoU — enabling safer autonomous navigation in winter conditions.",
-    tech: ["Python", "PyTorch", "U-Net", "OpenCV", "Semantic Segmentation"],
-    image:
-      "https://images.unsplash.com/photo-1491002052546-bf38f186af56?q=80&w=1200&auto=format&fit=crop",
+      "Ego-lane segmentation for driving in heavy snow, where lane markings are buried and the only cues left are tire tracks and snow texture. A U-Net reached 85.20% IoU on ACDC, then had to be retrained on hand-labelled data to learn the difference between \"road\" and \"my lane\".",
+    tech: [
+      "Python",
+      "PyTorch",
+      "U-Net",
+      "ResNet-18",
+      "segmentation-models-pytorch",
+      "Albumentations",
+      "OpenCV",
+      "ACDC",
+    ],
+    image: "/projects/winter-01-card.webp",
     repoLink: "#",
     caseStudy: {
       problem:
-        "Snow-covered terrain makes path detection extremely difficult for autonomous systems — standard edge detection fails when roads, sidewalks, and surroundings merge into a uniform white surface.",
+        "When heavy snow covers the road, the geometric lane markings an autonomous system normally keys off are simply gone. Human drivers fall back on tire tracks and texture. The goal was to reproduce that behaviour with semantic segmentation rather than object detection — and the harder, less obvious problem turned out to be defining what counts as the answer.",
       constraints: [
-        "High visual ambiguity in snow-covered scenes",
-        "Limited labeled winter-condition datasets",
-        "Real-time inference requirement for navigation use",
-        "Robust to varying snow density and lighting",
+        "Snow removes the lane geometry most perception stacks depend on",
+        "ACDC labels every asphalt surface as one class, with no notion of which lane is yours",
+        "No local GPU — development on an Intel Mac, training on free Kaggle T4s",
+        "Cloud GPU quota is finite, so broken code had to fail locally first",
       ],
       approach:
-        "Fine-tuned a U-Net architecture on a curated winter navigation dataset with custom augmentation (snow overlay, contrast jitter, random occlusion) to simulate real-world degradation. Used an encoder-decoder with skip connections to preserve spatial detail for precise boundary segmentation. Evaluated with mean IoU across navigable/non-navigable/obstacle classes.",
+        "Data: built a custom PyTorch Dataset over ACDC (Adverse Conditions Dataset with Correspondences), matching RGB frames to their _labelIds masks and extracting a binary mask for class 7 (road), with Albumentations handling resize and tensor conversion.\n\nDry run: rather than burn Kaggle quota on bugs, a local script pushed a single batch of 4 images through a lightweight U-Net (ResNet-18 encoder, ImageNet weights) on an Intel Mac, verifying tensor shapes and that gradients actually flowed.\n\nBaseline: 15 epochs on a Kaggle T4 with BCEWithLogitsLoss and Adam, augmenting with horizontal flips and brightness/contrast jitter. Validation IoU reached 85.20% at epoch 14.\n\nThe trap: that score was misleading. ACDC marks all asphalt as road, so the network faithfully highlighted the oncoming lane and the sidewalk too — correct by the metric, useless for navigation.\n\nFailed fix: masking the output with a fixed region-of-interest trapezoid cleaned up straight roads and then failed badly on curves, clipping away the actual safe path. A hardcoded geometric prior is not perception.\n\nReal fix: hand-labelled 150 frames in MakeSense.ai, drawing polygons that follow the forward tire tracks, wrote json_to_png_mask.py to turn the VGG JSON polygons into binary cv2 masks, and fine-tuned the 85.20% checkpoint on them for 5 epochs at a reduced learning rate. A Gaussian blur over the logits at inference removed the jagged edges left by clicking polygons by hand.",
       results: [
-        "85.20% mean IoU on winter path segmentation",
-        "Robust performance across variable snow density and lighting",
-        "Outperformed baseline edge-detection methods by >30% IoU",
+        "85.20% validation IoU, 0.0538 validation loss, at epoch 14 of the baseline",
+        "Fine-tuning loss fell 0.1464 → 0.0734 → 0.0552 over 5 epochs on the custom ego-lane set",
+        "Model learned ego-lane as a concept rather than inheriting it from a fixed ROI, so it holds on curves where the geometric filter broke",
+        "Whole pipeline trained on free-tier T4s, debugged locally on a CPU-only Mac",
       ],
       highlights: [
-        "U-Net semantic segmentation for snow-covered navigation",
-        "Custom winter augmentation pipeline",
-        "85.20% mean IoU on held-out test set",
-        "Skip-connection architecture preserves spatial path boundaries",
+        "U-Net with a ResNet-18 ImageNet encoder via segmentation-models-pytorch",
+        "Local single-batch dry run to validate shapes and gradients before paying for GPU",
+        "Diagnosed a dataset heuristic flaw hiding behind a high IoU score",
+        "Rejected a geometric ROI prior after it failed on curved roads",
+        "Hand-labelled 150 ego-lane frames and fine-tuned by transfer learning",
+        "Gaussian-blurred logits to smooth hand-drawn polygon artefacts",
       ],
       links: [
-        { label: "U-Net Paper", href: "https://arxiv.org/abs/1505.04597" },
-        { label: "PyTorch", href: "https://pytorch.org/" },
+        { label: "ACDC dataset", href: "https://acdc.vision.ee.ethz.ch/" },
+        { label: "U-Net paper", href: "https://arxiv.org/abs/1505.04597" },
+        {
+          label: "segmentation-models-pytorch",
+          href: "https://github.com/qubvel-org/segmentation_models.pytorch",
+        },
       ],
-      images: [],
+      images: [
+        {
+          src: "/projects/winter-05-egolane-final.webp",
+          alt: "Three panels: the driver's view of a snowy street, the model's binary prediction mask, and the final ego-lane overlay tracing only the forward path in green.",
+        },
+        {
+          src: "/projects/winter-02-heuristic-trap.webp",
+          alt: "The baseline model highlighting every asphalt surface, including the oncoming lane — a high IoU score that is useless for navigation.",
+        },
+        {
+          src: "/projects/winter-03-roi-straight.webp",
+          alt: "The fixed trapezoid region-of-interest filter cleanly isolating the ego lane on a straight road.",
+        },
+        {
+          src: "/projects/winter-04-roi-curve-fail.webp",
+          alt: "The same trapezoid filter on a curve, clipping away the real drivable path because the prior cannot bend.",
+        },
+        {
+          src: "/projects/winter-06-training.webp",
+          alt: "Training and validation curves across 15 epochs, converging to 85.20% IoU.",
+        },
+      ],
     },
   },
   {

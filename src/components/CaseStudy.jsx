@@ -2,6 +2,7 @@ import { useEffect, useCallback } from "react";
 import { motion as Motion, AnimatePresence } from "framer-motion";
 import { FiX, FiExternalLink } from "react-icons/fi";
 import { FaGithub } from "react-icons/fa";
+import ResponsiveImage from "./ResponsiveImage.jsx";
 
 export default function CaseStudy({ project, onClose }) {
   const isOpen = !!project;
@@ -59,10 +60,11 @@ export default function CaseStudy({ project, onClose }) {
         >
           {image && (
             <div className="relative h-56 w-full overflow-hidden flex-shrink-0">
-              <img
+              <ResponsiveImage
                 src={image}
-                alt={title}
+                alt=""
                 className="h-full w-full object-cover"
+                loading="eager"
               />
               {status && (
                 <span className="absolute left-4 top-4 rounded-full bg-[var(--paper-veil)] px-2.5 py-1 text-xs font-medium text-[var(--ink)]">
@@ -171,14 +173,22 @@ export default function CaseStudy({ project, onClose }) {
                 <section className="mb-6">
                   <h4 className="mb-2 text-lg font-semibold">Screens</h4>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    {images.map((src, i) => (
-                      <img
-                        key={i}
-                        src={src}
-                        alt={`s-${i}`}
-                        className="rounded-lg border border-[var(--line)]"
-                      />
-                    ))}
+                    {images.map((img, i) => {
+                      // Accepts either a bare URL or { src, alt }. A figure
+                      // that carries an argument deserves a real description,
+                      // but older entries are plain strings.
+                      const src = typeof img === "string" ? img : img.src;
+                      const alt = typeof img === "string" ? "" : (img.alt ?? "");
+                      return (
+                        <ResponsiveImage
+                          key={src ?? i}
+                          src={src}
+                          alt={alt}
+                          className="rounded-lg border border-[var(--line)]"
+                          loading="lazy"
+                        />
+                      );
+                    })}
                   </div>
                 </section>
               )}

@@ -20,18 +20,17 @@ function buildUrlWithWidth(src, width) {
   }
 }
 
+// Written as the bare `import.meta.env.BASE_URL` on purpose. Vite substitutes
+// that exact text at transform time; the optional-chaining form is left alone
+// and evaluates to undefined in dev, which silently drops the base prefix and
+// 404s every image we host ourselves.
+const BASE = import.meta.env.BASE_URL || "/";
+
 function resolveSrc(src) {
-  // If path starts with '/', prefix with Vite base for GitHub Pages compatibility
-  try {
-    if (typeof src === "string" && src.startsWith("/")) {
-      const base = import.meta?.env?.BASE_URL || "/";
-      // Ensure no double slashes when concatenating
-      return `${base.replace(/\/$/, "/")}${src.replace(/^\//, "")}`;
-    }
-  } catch {
-    // ignore and fall through
-  }
-  return src;
+  // A root-relative path is relative to the deployed base, not the domain:
+  // this site lives at /Portfolio/, not /.
+  if (typeof src !== "string" || !src.startsWith("/")) return src;
+  return `${BASE.replace(/\/$/, "")}/${src.replace(/^\//, "")}`;
 }
 
 export default function ResponsiveImage({
@@ -46,18 +45,24 @@ export default function ResponsiveImage({
   onError,
 }) {
   const resolved = resolveSrc(src);
-  const srcSet = widths
-    .map((w) => `${buildUrlWithWidth(resolved, w)} ${w}w`)
-    .join(", ");
+
+  // Only a CDN that resizes from a query param can honour a srcset. A file we
+  // ship ourselves has exactly one size, so advertising six widths for it
+  // would just be the same bytes listed six times.
+  const isResizable = /^https?:\/\//.test(resolved);
+  const srcSet = isResizable
+    ? widths.map((w) => `${buildUrlWithWidth(resolved, w)} ${w}w`).join(", ")
+    : undefined;
 
   // Choose a reasonable default src (largest width)
-  const fallbackSrc = buildUrlWithWidth(resolved, widths[widths.length - 1]);
+  const fallbackSrc = isResizable
+    ? buildUrlWithWidth(resolved, widths[widths.length - 1])
+    : resolved;
 
   return (
     <img
       src={fallbackSrc}
-      srcSet={srcSet}
-      sizes={sizes}
+      {...(srcSet ? { srcSet, sizes } : {})}
       alt={alt}
       className={className}
       loading={loading}
