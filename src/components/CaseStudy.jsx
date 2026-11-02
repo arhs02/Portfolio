@@ -31,6 +31,7 @@ export default function CaseStudy({ project, onClose }) {
     title,
     status,
     image,
+    team,
     tech = [],
     demoLink,
     repoLink,
@@ -87,6 +88,9 @@ export default function CaseStudy({ project, onClose }) {
             <div className="mb-4 flex flex-wrap items-start justify-between gap-3">
               <div>
                 <h3 className="display text-3xl text-[var(--ink)]">{title}</h3>
+                {team && (
+                  <p className="mt-1 text-sm text-[var(--ink-dim)]">{team}</p>
+                )}
                 {tech?.length > 0 && (
                   <div className="mt-2 flex flex-wrap gap-2">
                     {tech.map((t) => (
