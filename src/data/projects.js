@@ -75,7 +75,7 @@ const projects = [
     description:
       "A Python desktop app built with Flet and a FastAPI backend with MCP (Model Context Protocol) integration that orchestrates Gemini 2.5 Flash to act as a true desktop agent — reading Notion pages, managing files, querying knowledge bases, and executing tasks through a structured tool-call loop.",
     tech: ["Python", "Flet", "FastAPI", "MCP", "Gemini 2.5 Flash"],
-    repoLink: "#",
+    repoLink: "https://github.com/arhs02/Venyx",
     caseStudy: {
       problem:
         "Desktop productivity tools are siloed — notes in Notion, files on disk, context in your head. There's no unified agent that can read your workspace, understand intent, and act across tools without manual switching.",
@@ -314,7 +314,7 @@ const projects = [
     description:
       "An advanced MARL system optimizing emergency response coordination in wildfire scenarios, addressing credit assignment and multi-agent communication challenges.",
     tech: ["Python", "Stable Baselines3", "Gymnasium", "PyTorch"],
-    repoLink: "#",
+    repoLink: "https://github.com/arhs02/wildfire-env",
     caseStudy: {
       problem:
         "Wildfire containment requires coordinated multi-agent decision-making with limited resources. Single-agent approaches fail to capture collaborative suppression and movement policies.",
@@ -358,7 +358,7 @@ const projects = [
     tech: ["Swift", "SwiftUI", "Gemini API"],
     image:
       "https://images.unsplash.com/photo-1484480974693-6ca0a78fb36b?q=80&w=1200&auto=format&fit=crop",
-    repoLink: "#",
+    repoLink: "https://github.com/arhs02/Promptly",
     caseStudy: {
       problem:
         "Users struggle to bridge the gap between rough ideas and well-structured LLM prompts. Manual prompt engineering is time-consuming and blocks workflow.",
@@ -408,7 +408,7 @@ const projects = [
     image:
       "https://images.unsplash.com/photo-1484480974693-6ca0a78fb36b?q=80&w=1200&auto=format&fit=crop",
     demoLink: "https://lockin.nyc",
-    repoLink: "https://github.com/venaxin/Lock-IN",
+    repoLink: "https://github.com/arhs02/LockIN",
     metrics: { perf: 94, a11y: 98, bundle: "—" },
     caseStudy: {
       problem:
@@ -438,7 +438,7 @@ const projects = [
       ],
       links: [
         { label: "Live App", href: "https://lockin.nyc" },
-        { label: "GitHub", href: "https://github.com/venaxin/Lock-IN" },
+        { label: "GitHub", href: "https://github.com/arhs02/LockIN" },
         { label: "Gemini API", href: "https://ai.google.dev/" },
       ],
       images: [],
@@ -533,7 +533,7 @@ const projects = [
     image:
       "https://images.unsplash.com/photo-1554224155-1696413565d3?q=80&w=1200&auto=format&fit=crop",
     // demoLink: "#",
-    repoLink: "https://github.com/venaxin/SplitVoice",
+    repoLink: "https://github.com/arhs02/SplitVoice",
     metrics: { perf: 96, a11y: 100, bundle: "182KB" },
   },
   {
@@ -560,8 +560,8 @@ const projects = [
     tech: ["React", "Tailwind", "LLM", "Spaced Repetition"],
     image:
       "https://images.unsplash.com/photo-1555212697-194d092e3b8f?q=80&w=1200&auto=format&fit=crop", // books/learning
-    // demoLink: "#",
-    repoLink: "https://github.com/venaxin/Cognito",
+    // demoLink: "https://cognito-one.vercel.app", // deployed but half-finished — re-enable when complete
+    repoLink: "https://github.com/arhs02/Cognito",
   },
   {
     title: "Clarity Planner",
@@ -582,8 +582,8 @@ const projects = [
     ],
     image:
       "https://images.unsplash.com/photo-1506784983877-45594efa4cbe?q=80&w=1200&auto=format&fit=crop", // planning / calendar themed
-    demoLink: "https://venaxin.github.io/Clarity_Planner/",
-    repoLink: "https://github.com/venaxin/Clarity_Planner",
+    demoLink: "https://arhs02.github.io/Clarity_Planner/",
+    repoLink: "https://github.com/arhs02/Clarity_Planner",
     metrics: { perf: 95, a11y: 100, bundle: "—" },
     caseStudy: {
       problem:
@@ -634,7 +634,7 @@ const projects = [
     image:
       "https://images.unsplash.com/photo-1523580846011-d3a5bc25702b?q=80&w=1200&auto=format&fit=crop", // campus/events placeholder
     demoLink: "https://campusclubhouse.web.app/",
-    repoLink: "https://github.com/venaxin/CampusClubHouse",
+    repoLink: "https://github.com/arhs02/CampusClubHouse",
   },
 
   {
@@ -647,7 +647,7 @@ const projects = [
     image:
       "https://images.unsplash.com/photo-1517433456452-f9633a875f6f?q=80&w=1200&auto=format&fit=crop", // code editor themed
     // demoLink: none
-    repoLink: "https://github.com/venaxin/codelab",
+    repoLink: "https://github.com/arhs02/codelab",
   },
 
   // Research
@@ -721,7 +721,7 @@ const projects = [
     tech: ["Python", "Flask", "LangChain", "FAISS", "RAG", "VGG-16", "TensorFlow", "scikit-learn"],
     image:
       "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?q=80&w=1200&auto=format&fit=crop",
-    repoLink: "https://github.com/venaxin/HealthAI-Connect",
+    repoLink: "https://github.com/arhs02/HealthAI-Connect",
     metrics: { perf: 92, a11y: 96, bundle: "—" },
     caseStudy: {
       problem:
@@ -748,7 +748,7 @@ const projects = [
         "Unified REST API serving both diagnostic and recommendation modules",
       ],
       links: [
-        { label: "GitHub", href: "https://github.com/venaxin/HealthAI-Connect" },
+        { label: "GitHub", href: "https://github.com/arhs02/HealthAI-Connect" },
         { label: "Taylor & Francis AI Frontiers", href: "https://www.tandfonline.com/" },
       ],
       images: [],
@@ -764,7 +764,7 @@ const projects = [
     image:
       "https://images.unsplash.com/photo-1518779578993-ec3579fee39f?q=80&w=1200&auto=format&fit=crop",
     demoLink: "https://intellibot-one.vercel.app/",
-    repoLink: "https://github.com/venaxin/intellibot",
+    repoLink: "https://github.com/arhs02/intellibot",
     metrics: { perf: 93, a11y: 98, bundle: "240KB" },
   },
   {
@@ -777,7 +777,7 @@ const projects = [
     image:
       "https://images.pexels.com/photos/1118873/pexels-photo-1118873.jpeg?cs=srgb&dl=pexels-jplenio-1118873.jpg&fm=jpg", // local reliable thumbnail
     // demoLink: none
-    repoLink: "https://github.com/venaxin/weatherwiz",
+    repoLink: "https://github.com/arhs02/weatherwiz",
   },
   {
     title: "SonicWave",
@@ -788,8 +788,8 @@ const projects = [
     tech: ["JavaScript", "HTML", "CSS"],
     image:
       "https://images.unsplash.com/photo-1511379938547-c1f69419868d?q=80&w=1200&auto=format&fit=crop", // music-themed placeholder
-    demoLink: "https://venaxin.github.io/SonicWave/",
-    repoLink: "https://github.com/venaxin/SonicWave",
+    demoLink: "https://arhs02.github.io/SonicWave/",
+    repoLink: "https://github.com/arhs02/SonicWave",
   },
   {
     title: "Dynamic Calendar Wallpaper (iOS)",
@@ -800,7 +800,7 @@ const projects = [
     tech: ["iOS Shortcuts", "HTML", "CSS"],
     image:
       "https://images.unsplash.com/photo-1505238680356-667803448bb6?q=80&w=1200&auto=format&fit=crop",
-    repoLink: "https://github.com/venaxin/IOS-Dyna-Schedule-Wallpaper",
+    repoLink: "https://github.com/arhs02/IOS-Dyna-Schedule-Wallpaper",
     metrics: { perf: 99, a11y: 100, bundle: "0KB" },
   },
 ];

@@ -99,7 +99,7 @@ export default function CaseStudy({ project, onClose }) {
                 )}
               </div>
               <div className="flex items-center gap-2">
-                {demoLink && (
+                {demoLink && demoLink !== "#" && (
                   <a
                     href={demoLink}
                     target="_blank"
@@ -109,7 +109,7 @@ export default function CaseStudy({ project, onClose }) {
                     <FiExternalLink /> Live
                   </a>
                 )}
-                {repoLink && (
+                {repoLink && repoLink !== "#" && (
                   <a
                     href={repoLink}
                     target="_blank"
