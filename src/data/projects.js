@@ -817,42 +817,91 @@ const projects = [
     title: "HealthAI Connect",
     year: 2025,
     status: "Completed",
+    team: "Three-person final-year BE project, Muffakham Jah College of Engineering & Technology (Osmania University)",
     description:
-      "Multi-modal diagnostic platform with a RAG chatbot over ~9,000 records hitting 98.5% accuracy, backed by a VGG-16 CNN for medical imaging and a LangChain + FAISS retrieval pipeline for medication recommendations. Published in Taylor & Francis AI Frontiers.",
-    tech: ["Python", "Flask", "LangChain", "FAISS", "RAG", "VGG-16", "TensorFlow", "scikit-learn"],
-    image:
-      "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?q=80&w=1200&auto=format&fit=crop",
+      "A diagnostic platform carrying four separate models: Random Forest over structured symptoms, a TF-IDF classifier over free-text descriptions, and two transfer-learned CNNs reading chest X-rays and brain MRIs — with a FAISS-backed RAG chatbot grounding medication guidance in retrieved text. Published in Taylor & Francis AI Frontiers.",
+    tech: [
+      "Python",
+      "Flask",
+      "TensorFlow",
+      "VGG-16",
+      "scikit-learn",
+      "LangChain",
+      "FAISS",
+      "Gemini",
+      "SQLite",
+    ],
+    image: "/projects/health-01-card.webp",
     repoLink: "https://github.com/arhs02/HealthAI-Connect",
     metrics: { perf: 92, a11y: 96, bundle: "—" },
     caseStudy: {
       problem:
-        "Clinical diagnostic tools are either expensive specialist systems or generic symptom checkers that miss nuance. The goal was to build an accessible, high-accuracy system that handles both medical image diagnostics (tumors, pneumonia) and intelligent medication recommendations from clinical literature.",
+        "Diagnostic tooling splits into expensive specialist systems and generic symptom checkers that guess. The aim was one platform that could take whatever a patient actually arrives with — a list of symptoms, a paragraph describing how they feel, or a scan — and route each to a model suited to that shape of input, without the medication advice drifting into invention.",
       constraints: [
-        "High accuracy requirement on limited labeled medical imaging data",
-        "Real-time inference for web deployment (Flask)",
-        "Medication retrieval must stay grounded — no hallucination",
-        "Interpretable outputs for medical context",
+        "Four input types, each needing a different model rather than one stretched to fit",
+        "Limited labelled medical imaging data, so training from scratch was not viable",
+        "Medication guidance had to be grounded in retrieved text, not generated freely",
+        "Inference on CPU, served from Flask",
+        "Output had to be framed as triage, never as a diagnosis",
       ],
       approach:
-        "Diagnostic module: Fine-tuned a VGG-16 CNN (TensorFlow/Keras) on chest X-ray and brain MRI datasets for pneumonia and tumor classification. Transfer learning from ImageNet weights allowed high accuracy with limited data. Medication module: Built a RAG pipeline indexing a clinical drug/symptom corpus with FAISS for fast similarity search; a Random Forest classifier handles structured symptom input, with retrieved passages grounding the recommendation. Flask backend exposes both pipelines through a unified REST API.",
+        "Structured symptoms: a Random Forest over a symptom matrix, benchmarked against a Decision Tree with K-fold cross-validation.\n\nFree-text descriptions: a Passive Aggressive Classifier on TF-IDF features, chosen after comparing it with Naive Bayes across both TF-IDF and Count Vectorizer representations.\n\nImaging: two transfer-learned CNNs rather than one — VGG-16 for chest X-ray pneumonia classification, and a Sequential transfer-learning model for brain MRI tumour detection. ImageNet weights made both trainable on the small datasets available.\n\nMedication guidance: a LangChain RAG pipeline over a FAISS index built with sentence-transformers embeddings, with Gemini generating only from retrieved passages so recommendations stay anchored to source text.\n\nAround these sit the ordinary product parts — appointment booking, patient and clinician dashboards, a nutrition analyser — and a disclaimer on every prediction screen stating the output is not a substitute for professional diagnosis.",
       results: [
-        "98.5% accuracy from the RAG chatbot over ~9,000 records",
-        "RAG-grounded medication suggestions eliminate hallucination risk",
-        "Published: Taylor & Francis AI Frontiers, October 2025",
-        "Sub-second inference latency on CPU (Flask deployment)",
+        "Symptom classifier: Random Forest reached 98.58% accuracy and a 98.55% F1-score, beating a Decision Tree baseline that averaged 93.49% on the test set",
+        "Free-text classifier: Passive Aggressive with TF-IDF reached 93.9%, against 89% for the best Naive Bayes configuration",
+        "Brain tumour CNN: 99.42% training accuracy at 0.0158 loss, holding 98.33% on validation",
+        "Pneumonia CNN: 97.95% training accuracy, 90.87% on validation — the widest train/validation gap in the system and the model most in need of more data",
+        "RAG grounding keeps medication guidance tied to retrieved passages rather than free generation",
+        "Published in Taylor & Francis AI Frontiers, October 2025",
       ],
       highlights: [
-        "VGG-16 fine-tuned for tumor & pneumonia classification",
-        "LangChain + FAISS RAG pipeline over ~9,000 clinical records",
-        "Random Forest for structured symptom classification",
-        "Published research: Taylor & Francis AI Frontiers (Oct 2025)",
-        "Unified REST API serving both diagnostic and recommendation modules",
+        "Four models matched to four input types, not one model stretched across them",
+        "Every model choice justified against a benchmarked alternative",
+        "Transfer learning used to work around scarce labelled medical imaging",
+        "LangChain + FAISS retrieval grounding the medication chatbot",
+        "Flask application with SQLite persistence and role-separated dashboards",
+        "Medical disclaimer surfaced on every prediction screen",
       ],
       links: [
-        { label: "GitHub", href: "https://github.com/arhs02/HealthAI-Connect" },
-        { label: "Taylor & Francis AI Frontiers", href: "https://www.tandfonline.com/" },
+        {
+          label: "GitHub",
+          href: "https://github.com/arhs02/HealthAI-Connect",
+        },
+        {
+          label: "Project report (PDF)",
+          href: "https://github.com/arhs02/HealthAI-Connect/blob/main/PPts%20nd%20report/report/HealthAI_connect.pdf",
+        },
+        {
+          label: "Project presentation (PDF)",
+          href: "https://github.com/arhs02/HealthAI-Connect/blob/main/PPts%20nd%20report/ppt/BATCH_17_REVIEW_2.pdf",
+        },
       ],
-      images: [],
+      images: [
+        {
+          src: "/projects/health-02-tumor.webp",
+          alt: "Brain tumour detection: an uploaded axial MRI with the result reading tumour detected, beside a clinical reference panel.",
+        },
+        {
+          src: "/projects/health-03-pneumonia.webp",
+          alt: "Pneumonia detection: an uploaded chest X-ray awaiting prediction, with a disclaimer banner across the top stating this is not a substitute for professional diagnosis.",
+        },
+        {
+          src: "/projects/health-05-symptoms.webp",
+          alt: "Symptom-based disease predictor, taking up to six symptoms as structured input for the Random Forest classifier.",
+        },
+        {
+          src: "/projects/health-07-chatbot.webp",
+          alt: "The RAG-backed consultancy chatbot answering a patient question in a conversational thread.",
+        },
+        {
+          src: "/projects/health-04-dashboard.webp",
+          alt: "Patient dashboard with upcoming appointments, a BMI calculator and the nutrition analyser.",
+        },
+        {
+          src: "/projects/health-06-nutrivision.webp",
+          alt: "NutriVision analysing a photographed meal and returning a nutritional breakdown against the patient's profile.",
+        },
+      ],
     },
   },
   {
