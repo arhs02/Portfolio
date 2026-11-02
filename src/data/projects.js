@@ -406,6 +406,7 @@ const projects = [
       "PPO",
       "PyGame",
     ],
+    image: "/projects/fire-01-card.webp",
     repoLink: "#",
     caseStudy: {
       problem:
@@ -447,7 +448,36 @@ const projects = [
           href: "https://stable-baselines3.readthedocs.io/",
         },
       ],
-      images: [],
+      images: [
+        {
+          src: "/projects/fire-02-deploy.webp",
+          alt: "Step 0, deployment: the three agents spawn at the map edges with a single ignition point in the centre — nothing within reach of any of them.",
+        },
+        {
+          src: "/projects/fire-03-converge.webp",
+          alt: "Step 50, convergence: agents follow the Compass Vector in toward the fire centroid.",
+        },
+        {
+          src: "/projects/fire-04-contain.webp",
+          alt: "Step 150, containment: agents hold position around the fire perimeter, earning the Hover Bonus.",
+        },
+        {
+          src: "/projects/fire-05-suppress.webp",
+          alt: "Step 250, suppression: cooperative extinguishing has arrested the spread, leaving a burn scar rather than a growing front.",
+        },
+        {
+          src: "/projects/fire-06-reward.webp",
+          alt: "PPO mean episode reward climbing from roughly -4,700 to about 3,000 over 200,000 timesteps, raw and smoothed.",
+        },
+        {
+          src: "/projects/fire-07-steps.webp",
+          alt: "Episode length falling from over 600 steps to under 250 as agents stop wandering and intercept the fire directly.",
+        },
+        {
+          src: "/projects/fire-08-tabular.webp",
+          alt: "Tabular Q-Learning mean reward for comparison: high variance throughout and no convergence at this state-space size.",
+        },
+      ],
     },
   },
   {
