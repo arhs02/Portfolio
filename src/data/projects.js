@@ -69,6 +69,53 @@ const projects = [
   },
   // New 8 Projects (2025)
   {
+    title: "ImmersEstate",
+    year: 2026,
+    status: "Ongoing",
+    description:
+      "A rental platform being built from the database up — Postgres schema, role-aware JWT auth and a typed Express API, with a React front end wired to it. Currently an authentication foundation rather than a product; the listings and immersive viewing it is named for are still ahead of it.",
+    tech: [
+      "TypeScript",
+      "React 19",
+      "Vite",
+      "Express 5",
+      "PostgreSQL",
+      "JWT",
+      "bcrypt",
+    ],
+    repoLink: "#",
+    caseStudy: {
+      problem:
+        "Rental platforms involve three parties who must not see the same things: an admin, a landlord listing property, and a tenant looking for one. Role separation added after the fact tends to become a tangle of per-route conditionals, so this one starts at the schema and works outward.",
+      constraints: [
+        "Roles belong in the type system and the database, not in scattered route checks",
+        "TypeScript end to end, so a schema change surfaces at compile time",
+        "Passwords hashed, sessions stateless — auth correct before any feature sits on it",
+        "Schema re-runnable during development without hand-resetting the database",
+      ],
+      approach:
+        "Database first: a user_role Postgres enum fixes admin, landlord and tenant as a type rather than a string column, with separate landlord_details and tenant_details tables keyed to the user so role-specific fields have somewhere to go that does not widen the users table.\n\nAuth next: bcrypt-hashed passwords, a JWT login route, an /auth/me endpoint for token validation, and middleware so route protection is declared once rather than repeated.\n\nFront end last: React 19 and Vite in TypeScript, wired to the auth flow, so the first screen exercises the whole stack before any feature is built on top of it.",
+      results: [
+        "Postgres schema with role enum and per-role detail tables",
+        "Working JWT login, token-validation endpoint and auth middleware",
+        "Typed Express 5 API with CORS, talking to a React 19 client",
+        "Nine commits over four days to a running auth round-trip",
+      ],
+      highlights: [
+        "Roles modelled as a database enum rather than a free-text column",
+        "Per-role detail tables instead of a widening users table",
+        "bcrypt hashing with stateless JWT sessions",
+        "TypeScript across client and server",
+        "Idempotent schema script for repeatable local setup",
+      ],
+      links: [
+        { label: "PostgreSQL enums", href: "https://www.postgresql.org/docs/current/datatype-enum.html" },
+        { label: "Express", href: "https://expressjs.com/" },
+      ],
+      images: [],
+    },
+  },
+  {
     title: "Venyx: Agentic Desktop Productivity OS",
     year: 2025,
     status: "Ongoing",
